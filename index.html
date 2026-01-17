@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Duty Planner</title>
 
-  <!-- Tom Select (searchable dropdowns) -->
+  <!-- Tom Select (searchable) -->
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
@@ -99,54 +99,53 @@
     PLI: 'Park Lane Interchange'
   };
 
-  const allDuties = {
-    Sunday: [
-      { code: '102/1020', station: 'CHI', time: '0800 - 1700' },
-      { code: '103/1030', station: 'SSS', time: '0800 - 1700' },
-      { code: '105/1050', station: 'GHD', time: '0800 - 1700' },
-      { code: '106/1060', station: 'CEN', time: '0800 - 1700' },
-      { code: '107/1070', station: 'MMT', time: '0800 - 1700' },
-      { code: '108/1080', station: 'SJM', time: '0800 - 1700' },
-      { code: '109/1090', station: 'MAN', time: '0800 - 1700' },
-      { code: '112A/B', station: 'HAY', time: '0800 - 1700' },
-      { code: '1021/1022', station: 'CHI', time: '1500 - 0000' },
-      { code: '1031/1032', station: 'SSS', time: '1500 - 0000' },
-      { code: '1051/1052', station: 'GHD', time: '1500 - 0000' },
-      { code: '1061/1062', station: 'CEN', time: '1500 - 0000' },
-      { code: '1071/1072', station: 'MMT', time: '1500 - 0000' },
-      { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
-      { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
-      { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
-      { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
-    ],
-    Saturday: [
-      { code: '202/2020', station: 'CHI', time: '0700 - 1600' },
-      { code: '203/2030', station: 'SSS', time: '0700 - 1600' },
-      { code: '204/2040', station: 'HTH', time: '0700 - 1600' },
-      { code: '205/2050', station: 'GHD', time: '0700 - 1600' },
-      { code: '206/2060/2069', station: 'CEN', time: '0700 - 1600' },
-      { code: '207/2070', station: 'MMT', time: '0700 - 1600' },
-      { code: '208/2080', station: 'SJM', time: '0700 - 1600' },
-      { code: '209/2090', station: 'MAN', time: '0700 - 1600' },
-      { code: '210A/B', station: 'BYK', time: '0700 - 1600' },
-      { code: '211/2110', station: 'NSH', time: '0700 - 1600' },
-      { code: '212/2120', station: 'HAY', time: '0700 - 1600' },
-      { code: '213/2130', station: 'JES', time: '0700 - 1600' },
-      { code: '216', station: 'PLI', time: '0900 - 1800' },
-      { code: '2021/2022', station: 'CHI', time: '1500 - 0000' },
-      { code: '2031/2032', station: 'SSS', time: '1500 - 0000' },
-      { code: '2041/2042', station: 'HTH', time: '1500 - 0000' },
-      { code: '2051/2052', station: 'GHD', time: '1500 - 0000' },
-      { code: '2061/2062', station: 'CEN', time: '1500 - 0000' },
-      { code: '2071/2072', station: 'MMT', time: '1500 - 0000' },
-      { code: '2081/2082', station: 'SJM', time: '1500 - 0000' },
-      { code: '2091/2092', station: 'MAN', time: '1500 - 0000' },
-      { code: '2111/2112', station: 'NSH', time: '1500 - 0000' },
-      { code: '2121/2122', station: 'HAY', time: '1500 - 0000' }
-    ]
-  };
+  const dutiesSunday = [
+    { code: '102/1020', station: 'CHI', time: '0800 - 1700' },
+    { code: '103/1030', station: 'SSS', time: '0800 - 1700' },
+    { code: '105/1050', station: 'GHD', time: '0800 - 1700' },
+    { code: '106/1060', station: 'CEN', time: '0800 - 1700' },
+    { code: '107/1070', station: 'MMT', time: '0800 - 1700' },
+    { code: '108/1080', station: 'SJM', time: '0800 - 1700' },
+    { code: '109/1090', station: 'MAN', time: '0800 - 1700' },
+    { code: '112A/B', station: 'HAY', time: '0800 - 1700' },
+    { code: '1021/1022', station: 'CHI', time: '1500 - 0000' },
+    { code: '1031/1032', station: 'SSS', time: '1500 - 0000' },
+    { code: '1051/1052', station: 'GHD', time: '1500 - 0000' },
+    { code: '1061/1062', station: 'CEN', time: '1500 - 0000' },
+    { code: '1071/1072', station: 'MMT', time: '1500 - 0000' },
+    { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
+    { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
+    { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
+    { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
+  ];
 
-  const weekdayDuties = [
+  const dutiesSaturday = [
+    { code: '202/2020', station: 'CHI', time: '0700 - 1600' },
+    { code: '203/2030', station: 'SSS', time: '0700 - 1600' },
+    { code: '204/2040', station: 'HTH', time: '0700 - 1600' },
+    { code: '205/2050', station: 'GHD', time: '0700 - 1600' },
+    { code: '206/2060/2069', station: 'CEN', time: '0700 - 1600' },
+    { code: '207/2070', station: 'MMT', time: '0700 - 1600' },
+    { code: '208/2080', station: 'SJM', time: '0700 - 1600' },
+    { code: '209/2090', station: 'MAN', time: '0700 - 1600' },
+    { code: '210A/B', station: 'BYK', time: '0700 - 1600' },
+    { code: '211/2110', station: 'NSH', time: '0700 - 1600' },
+    { code: '212/2120', station: 'HAY', time: '0700 - 1600' },
+    { code: '213/2130', station: 'JES', time: '0700 - 1600' },
+    { code: '216', station: 'PLI', time: '0900 - 1800' },
+    { code: '2021/2022', station: 'CHI', time: '1500 - 0000' },
+    { code: '2031/2032', station: 'SSS', time: '1500 - 0000' },
+    { code: '2041/2042', station: 'HTH', time: '1500 - 0000' },
+    { code: '2051/2052', station: 'GHD', time: '1500 - 0000' },
+    { code: '2061/2062', station: 'CEN', time: '1500 - 0000' },
+    { code: '2071/2072', station: 'MMT', time: '1500 - 0000' },
+    { code: '2081/2082', station: 'SJM', time: '1500 - 0000' },
+    { code: '2091/2092', station: 'MAN', time: '1500 - 0000' },
+    { code: '2111/2112', station: 'NSH', time: '1500 - 0000' },
+    { code: '2121/2122', station: 'HAY', time: '1500 - 0000' }
+  ];
+
+  const dutiesWeekday = [
     { code: '02A/B', station: 'CHI', time: '0700 - 1600' },
     { code: '03A/B', station: 'SSS', time: '0700 - 1600' },
     { code: '04A/B', station: 'HTH', time: '0645 - 1545' },
@@ -177,10 +176,6 @@
     { code: '18', station: 'PLI', time: '1500 - 0000' }
   ];
 
-  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(d => {
-    allDuties[d] = weekdayDuties;
-  });
-
   const selectedDuties = {};
   const weekStartInput = document.getElementById('weekStart');
   const weekContainer = document.getElementById('week');
@@ -195,7 +190,6 @@
   }
 
   function updateButtons() {
-    // MINIMUM 4 duties selected
     const validCount = Object.keys(selectedDuties).length >= 4;
     const weekSelected = weekStartInput.value && isValidWeekStart(weekStartInput.value);
     printBtn.disabled = !(validCount && weekSelected);
@@ -222,7 +216,12 @@
   }
 
   days.forEach((day, idx) => {
-    const list = allDuties[day] || [];
+    const list = day === 'Sunday'
+      ? dutiesSunday
+      : day === 'Saturday'
+      ? dutiesSaturday
+      : dutiesWeekday;
+
     const div = document.createElement('div');
     div.className = 'day';
     const selectId = `select-${day}`;
@@ -248,8 +247,13 @@
     if (e.target.tagName === 'SELECT') {
       const day = e.target.dataset.day;
       const val = e.target.value;
+      const list = day === 'Sunday'
+        ? dutiesSunday
+        : day === 'Saturday'
+        ? dutiesSaturday
+        : dutiesWeekday;
+      const duty = list.find(d => d.code === val);
       const detailDiv = document.getElementById(`details-${day}`);
-      const duty = (allDuties[day] || []).find(d => d.code === val);
 
       if (val && duty) {
         selectedDuties[day] = val;
@@ -258,6 +262,7 @@
         delete selectedDuties[day];
         detailDiv.textContent = '';
       }
+
       updateButtons();
     }
   });
@@ -274,7 +279,12 @@
     summaryContent.innerHTML = '';
     days.forEach(day => {
       const code = selectedDuties[day];
-      const duty = (allDuties[day] || []).find(d => d.code === code);
+      const dutyList = day === 'Sunday'
+        ? dutiesSunday
+        : day === 'Saturday'
+        ? dutiesSaturday
+        : dutiesWeekday;
+      const duty = dutyList.find(d => d.code === code);
       const div = document.createElement('div');
       div.className = 'summary-day';
       div.innerHTML = duty
@@ -289,15 +299,21 @@
   exportBtn.addEventListener('click', () => {
     let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
     Object.entries(selectedDuties).forEach(([day, code]) => {
+      const dutyList = day === 'Sunday'
+        ? dutiesSunday
+        : day === 'Saturday'
+        ? dutiesSaturday
+        : dutiesWeekday;
+      const duty = dutyList.find(d => d.code === code);
       const offset = days.indexOf(day);
-      const duty = (allDuties[day] || []).find(d => d.code === code);
       const [start, end] = parseDutyTime(duty.time, offset);
+
       ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${stationNames[duty.station] || duty.station}\n`;
-      ics += `DTSTART:${toICSDate(start)}\n`;
-      ics += `DTEND:${toICSDate(end)}\n`;
+      ics += `DTSTART:${toICSDate(start)}\nDTEND:${toICSDate(end)}\n`;
       ics += `LOCATION:${stationNames[duty.station] || duty.station}\n`;
       ics += `DESCRIPTION:${duty.code} - ${duty.time}\nEND:VEVENT\n`;
     });
+
     ics += 'END:VCALENDAR';
 
     const blob = new Blob([ics], { type: 'text/calendar' });
