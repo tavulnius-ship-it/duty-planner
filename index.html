@@ -272,12 +272,20 @@
   });
 
   weekStartInput.addEventListener('change', () => {
-    if (!isValidWeekStart(weekStartInput.value)) {
-      alert("Week Commencing must be a Sunday.");
-      weekStartInput.value = '';
-    }
-    updateButtons();
-  });
+  if (!weekStartInput.value) return;
+
+  const selected = new Date(weekStartInput.value);
+  const day = selected.getDay();
+
+  // If not Sunday, push forward to next Sunday
+  if (day !== 0) {
+    const daysToAdd = 7 - day;
+    selected.setDate(selected.getDate() + daysToAdd);
+    weekStartInput.value = selected.toISOString().split('T')[0];
+  }
+
+  updateButtons();
+});
 
   printBtn.addEventListener('click', () => {
     summaryContent.innerHTML = '';
@@ -297,7 +305,7 @@
       summaryContent.appendChild(div);
     });
     summaryContainer.style.display = 'block';
-    window.print();
+    // no window.print()
   });
 
   exportBtn.addEventListener('click', () => {
@@ -332,6 +340,7 @@
 
 </body>
 </html>
+
 
 
 
