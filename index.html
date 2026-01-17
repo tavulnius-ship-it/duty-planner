@@ -181,7 +181,7 @@
   function parseDutyTime(timeStr, offset) {
     const weekStart = new Date(weekStartInput.value);
     const dayDate = new Date(weekStart);
-    dayDate.setDate(weekStart.getDate() + offset);
+    dayDate.setDate(weekStart.getDate() + offset + 1);
 
     const [startStr, endStr] = timeStr.split(' - ');
     const [sh, sm] = startStr.match(/.{1,2}/g).map(Number);
@@ -248,3 +248,4 @@
 
 </body>
 </html>
+
