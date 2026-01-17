@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Duty Planner - Mon to Fri</title>
+  <title>Duty Planner</title>
+
+  <!-- ✅ Tom Select CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -27,10 +30,6 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
-    select {
-      width: 100%;
-      margin-top: 10px;
-    }
     .details {
       margin-top: 8px;
       font-size: 14px;
@@ -52,9 +51,12 @@
     }
     .summary-day strong {
       display: inline-block;
-      width: 80px;
+      width: 90px;
     }
   </style>
+
+  <!-- ✅ Tom Select JS -->
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 </head>
 <body>
 
@@ -78,7 +80,7 @@
 </div>
 
 <script>
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dutyCodes = [
     { code: '02A/B', station: 'CHI', time: '0700 - 1600' },
     { code: '03A/B', station: 'SSS', time: '0700 - 1600' },
@@ -111,36 +113,19 @@
   ];
 
   const weekContainer = document.getElementById('week');
-  const summaryContainer = document.getElementById('summary');
-  const summaryContent = document.getElementById('summaryContent');
+  const weekStartInput = document.getElementById('weekStart');
   const printBtn = document.getElementById('printBtn');
   const exportBtn = document.getElementById('exportBtn');
-  const weekStartInput = document.getElementById('weekStart');
+  const summaryContainer = document.getElementById('summary');
+  const summaryContent = document.getElementById('summaryContent');
 
   let selectedDuties = {};
 
-  // Create day blocks
-  days.forEach(day => {
-    const dayDiv = document.createElement('div');
-    dayDiv.className = 'day';
-    dayDiv.innerHTML = `
-      <strong>${day}</strong><br/>
-      <select data-day="${day}">
-        <option value="">-- Select Duty Code --</option>
-        ${dutyCodes.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
-      </select>
-      <div class="details" id="details-${day}"></div>
-    `;
-    weekContainer.appendChild(dayDiv);
-  });
-
-  // Validate Week Start (Sunday only)
   function isValidWeekStart(dateStr) {
     const date = new Date(dateStr);
     return date.getDay() === 0;
   }
 
-  // Validate button state
   function updateButtons() {
     const validCount = Object.keys(selectedDuties).length === 4;
     const weekSelected = weekStartInput.value && isValidWeekStart(weekStartInput.value);
@@ -148,7 +133,32 @@
     exportBtn.disabled = !(validCount && weekSelected);
   }
 
-  // Handle dropdowns
+  days.forEach(day => {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day';
+    const selectId = `select-${day}`;
+
+    dayDiv.innerHTML = `
+      <strong>${day}</strong><br/>
+      <select id="${selectId}" data-day="${day}">
+        <option value="">-- Select Duty Code --</option>
+        ${dutyCodes.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
+      </select>
+      <div class="details" id="details-${day}"></div>
+    `;
+    weekContainer.appendChild(dayDiv);
+
+    // Activate Tom Select on this select
+    new TomSelect(`#${selectId}`, {
+      create: false,
+      sortField: {
+        field: "text",
+        direction: "asc"
+      },
+      placeholder: "-- Select Duty Code --"
+    });
+  });
+
   weekContainer.addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
       const day = e.target.dataset.day;
@@ -168,7 +178,6 @@
     }
   });
 
-  // Week start date
   weekStartInput.addEventListener('change', () => {
     if (!isValidWeekStart(weekStartInput.value)) {
       alert("Week Commencing must be a Sunday.");
@@ -177,11 +186,10 @@
     updateButtons();
   });
 
-  // Parse start/end times into Date objects
-  function parseDutyTime(timeStr, offset) {
+  function parseDutyTime(timeStr, dayOffset) {
     const weekStart = new Date(weekStartInput.value);
     const dayDate = new Date(weekStart);
-    dayDate.setDate(weekStart.getDate() + offset + 1);
+    dayDate.setDate(weekStart.getDate() + dayOffset);
 
     const [startStr, endStr] = timeStr.split(' - ');
     const [sh, sm] = startStr.match(/.{1,2}/g).map(Number);
@@ -197,10 +205,10 @@
     return [startDate, endDate];
   }
 
-  // Format to ICS UTC
-  const toICSDate = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  function toICSDate(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
 
-  // Print
   printBtn.addEventListener('click', () => {
     summaryContent.innerHTML = '';
     days.forEach(day => {
@@ -208,21 +216,17 @@
       const duty = dutyCodes.find(d => d.code === code);
       const div = document.createElement('div');
       div.className = 'summary-day';
-      if (duty) {
-        div.innerHTML = `<strong>${day}:</strong> ${duty.code} = ${duty.station} - ${duty.time}`;
-      } else {
-        div.innerHTML = `<strong>${day}:</strong> RD`;
-      }
+      div.innerHTML = duty
+        ? `<strong>${day}:</strong> ${duty.code} = ${duty.station} - ${duty.time}`
+        : `<strong>${day}:</strong> RD`;
       summaryContent.appendChild(div);
     });
     summaryContainer.style.display = 'block';
     window.print();
   });
 
-  // Export ICS
   exportBtn.addEventListener('click', () => {
     let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
-
     Object.entries(selectedDuties).forEach(([day, code]) => {
       const duty = dutyCodes.find(d => d.code === code);
       const offset = days.indexOf(day);
@@ -233,7 +237,6 @@
       ics += `LOCATION:${duty.station}\n`;
       ics += `DESCRIPTION:${duty.code} - ${duty.time}\nEND:VEVENT\n`;
     });
-
     ics += 'END:VCALENDAR';
 
     const blob = new Blob([ics], { type: 'text/calendar' });
@@ -248,4 +251,3 @@
 
 </body>
 </html>
-
