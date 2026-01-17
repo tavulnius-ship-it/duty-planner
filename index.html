@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Duty Planner</title>
 
-  <!-- ✅ Tom Select CSS -->
+  <!-- Tom Select (searchable dropdowns) -->
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -45,18 +47,15 @@
       display: none;
     }
     .summary-day {
-      margin-bottom: 10px;
-      border-bottom: 1px solid #ddd;
+      margin-bottom: 12px;
       padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
     }
     .summary-day strong {
       display: inline-block;
-      width: 90px;
+      width: 100px;
     }
   </style>
-
-  <!-- ✅ Tom Select JS -->
-  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 </head>
 <body>
 
@@ -81,7 +80,73 @@
 
 <script>
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const dutyCodes = [
+
+  const stationNames = {
+    CHI: 'Chichester',
+    SSS: 'South Shields',
+    HTH: 'Heworth',
+    GHD: 'Gateshead',
+    CEN: 'Central Station',
+    MMT: 'Monument',
+    SJM: 'St James',
+    MAN: 'Manors',
+    BYK: 'Byker',
+    NSH: 'North Shields',
+    HAY: 'Haymarket',
+    JES: 'Jesmond',
+    RGC: 'Regent Centre',
+    APT: 'Airport',
+    PLI: 'Park Lane Interchange'
+  };
+
+  const allDuties = {
+    Sunday: [
+      { code: '102/1020', station: 'CHI', time: '0800 - 1700' },
+      { code: '103/1030', station: 'SSS', time: '0800 - 1700' },
+      { code: '105/1050', station: 'GHD', time: '0800 - 1700' },
+      { code: '106/1060', station: 'CEN', time: '0800 - 1700' },
+      { code: '107/1070', station: 'MMT', time: '0800 - 1700' },
+      { code: '108/1080', station: 'SJM', time: '0800 - 1700' },
+      { code: '109/1090', station: 'MAN', time: '0800 - 1700' },
+      { code: '112A/B', station: 'HAY', time: '0800 - 1700' },
+      { code: '1021/1022', station: 'CHI', time: '1500 - 0000' },
+      { code: '1031/1032', station: 'SSS', time: '1500 - 0000' },
+      { code: '1051/1052', station: 'GHD', time: '1500 - 0000' },
+      { code: '1061/1062', station: 'CEN', time: '1500 - 0000' },
+      { code: '1071/1072', station: 'MMT', time: '1500 - 0000' },
+      { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
+      { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
+      { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
+      { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
+    ],
+    Saturday: [
+      { code: '202/2020', station: 'CHI', time: '0700 - 1600' },
+      { code: '203/2030', station: 'SSS', time: '0700 - 1600' },
+      { code: '204/2040', station: 'HTH', time: '0700 - 1600' },
+      { code: '205/2050', station: 'GHD', time: '0700 - 1600' },
+      { code: '206/2060/2069', station: 'CEN', time: '0700 - 1600' },
+      { code: '207/2070', station: 'MMT', time: '0700 - 1600' },
+      { code: '208/2080', station: 'SJM', time: '0700 - 1600' },
+      { code: '209/2090', station: 'MAN', time: '0700 - 1600' },
+      { code: '210A/B', station: 'BYK', time: '0700 - 1600' },
+      { code: '211/2110', station: 'NSH', time: '0700 - 1600' },
+      { code: '212/2120', station: 'HAY', time: '0700 - 1600' },
+      { code: '213/2130', station: 'JES', time: '0700 - 1600' },
+      { code: '216', station: 'PLI', time: '0900 - 1800' },
+      { code: '2021/2022', station: 'CHI', time: '1500 - 0000' },
+      { code: '2031/2032', station: 'SSS', time: '1500 - 0000' },
+      { code: '2041/2042', station: 'HTH', time: '1500 - 0000' },
+      { code: '2051/2052', station: 'GHD', time: '1500 - 0000' },
+      { code: '2061/2062', station: 'CEN', time: '1500 - 0000' },
+      { code: '2071/2072', station: 'MMT', time: '1500 - 0000' },
+      { code: '2081/2082', station: 'SJM', time: '1500 - 0000' },
+      { code: '2091/2092', station: 'MAN', time: '1500 - 0000' },
+      { code: '2111/2112', station: 'NSH', time: '1500 - 0000' },
+      { code: '2121/2122', station: 'HAY', time: '1500 - 0000' }
+    ]
+  };
+
+  const weekdayDuties = [
     { code: '02A/B', station: 'CHI', time: '0700 - 1600' },
     { code: '03A/B', station: 'SSS', time: '0700 - 1600' },
     { code: '04A/B', station: 'HTH', time: '0645 - 1545' },
@@ -112,14 +177,17 @@
     { code: '18', station: 'PLI', time: '1500 - 0000' }
   ];
 
-  const weekContainer = document.getElementById('week');
+  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(d => {
+    allDuties[d] = weekdayDuties;
+  });
+
+  const selectedDuties = {};
   const weekStartInput = document.getElementById('weekStart');
+  const weekContainer = document.getElementById('week');
   const printBtn = document.getElementById('printBtn');
   const exportBtn = document.getElementById('exportBtn');
   const summaryContainer = document.getElementById('summary');
   const summaryContent = document.getElementById('summaryContent');
-
-  let selectedDuties = {};
 
   function isValidWeekStart(dateStr) {
     const date = new Date(dateStr);
@@ -127,34 +195,51 @@
   }
 
   function updateButtons() {
-    const validCount = Object.keys(selectedDuties).length === 4;
+    // MINIMUM 4 duties selected
+    const validCount = Object.keys(selectedDuties).length >= 4;
     const weekSelected = weekStartInput.value && isValidWeekStart(weekStartInput.value);
     printBtn.disabled = !(validCount && weekSelected);
     exportBtn.disabled = !(validCount && weekSelected);
   }
 
-  days.forEach(day => {
-    const dayDiv = document.createElement('div');
-    dayDiv.className = 'day';
+  function parseDutyTime(timeStr, dayOffset) {
+    const weekStart = new Date(weekStartInput.value);
+    const [sh, sm] = timeStr.split(' - ')[0].match(/.{1,2}/g).map(Number);
+    const [eh, em] = timeStr.split(' - ')[1].match(/.{1,2}/g).map(Number);
+
+    const start = new Date(weekStart);
+    start.setDate(start.getDate() + dayOffset);
+    start.setHours(sh, sm, 0);
+
+    const end = new Date(start);
+    end.setHours(eh, em, 0);
+    if (end <= start) end.setDate(end.getDate() + 1);
+    return [start, end];
+  }
+
+  function toICSDate(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
+
+  days.forEach((day, idx) => {
+    const list = allDuties[day] || [];
+    const div = document.createElement('div');
+    div.className = 'day';
     const selectId = `select-${day}`;
 
-    dayDiv.innerHTML = `
+    div.innerHTML = `
       <strong>${day}</strong><br/>
       <select id="${selectId}" data-day="${day}">
         <option value="">-- Select Duty Code --</option>
-        ${dutyCodes.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
+        ${list.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
       </select>
       <div class="details" id="details-${day}"></div>
     `;
-    weekContainer.appendChild(dayDiv);
+    weekContainer.appendChild(div);
 
-    // Activate Tom Select on this select
     new TomSelect(`#${selectId}`, {
       create: false,
-      sortField: {
-        field: "text",
-        direction: "asc"
-      },
+      sortField: { field: 'text', direction: 'asc' },
       placeholder: "-- Select Duty Code --"
     });
   });
@@ -162,18 +247,17 @@
   weekContainer.addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
       const day = e.target.dataset.day;
-      const code = e.target.value;
+      const val = e.target.value;
       const detailDiv = document.getElementById(`details-${day}`);
+      const duty = (allDuties[day] || []).find(d => d.code === val);
 
-      if (code) {
-        const duty = dutyCodes.find(d => d.code === code);
-        selectedDuties[day] = code;
-        detailDiv.textContent = `${duty.station} - ${duty.time}`;
+      if (val && duty) {
+        selectedDuties[day] = val;
+        detailDiv.textContent = `${stationNames[duty.station] || duty.station} - ${duty.time}`;
       } else {
         delete selectedDuties[day];
         detailDiv.textContent = '';
       }
-
       updateButtons();
     }
   });
@@ -186,38 +270,15 @@
     updateButtons();
   });
 
-  function parseDutyTime(timeStr, dayOffset) {
-    const weekStart = new Date(weekStartInput.value);
-    const dayDate = new Date(weekStart);
-    dayDate.setDate(weekStart.getDate() + dayOffset);
-
-    const [startStr, endStr] = timeStr.split(' - ');
-    const [sh, sm] = startStr.match(/.{1,2}/g).map(Number);
-    const [eh, em] = endStr.match(/.{1,2}/g).map(Number);
-
-    const startDate = new Date(dayDate);
-    startDate.setHours(sh, sm, 0);
-
-    const endDate = new Date(startDate);
-    endDate.setHours(eh, em, 0);
-    if (endDate <= startDate) endDate.setDate(endDate.getDate() + 1); // Overnight
-
-    return [startDate, endDate];
-  }
-
-  function toICSDate(date) {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-  }
-
   printBtn.addEventListener('click', () => {
     summaryContent.innerHTML = '';
     days.forEach(day => {
       const code = selectedDuties[day];
-      const duty = dutyCodes.find(d => d.code === code);
+      const duty = (allDuties[day] || []).find(d => d.code === code);
       const div = document.createElement('div');
       div.className = 'summary-day';
       div.innerHTML = duty
-        ? `<strong>${day}:</strong> ${duty.code} = ${duty.station} - ${duty.time}`
+        ? `<strong>${day}:</strong> ${duty.code} = ${stationNames[duty.station] || duty.station} - ${duty.time}`
         : `<strong>${day}:</strong> RD`;
       summaryContent.appendChild(div);
     });
@@ -228,13 +289,13 @@
   exportBtn.addEventListener('click', () => {
     let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
     Object.entries(selectedDuties).forEach(([day, code]) => {
-      const duty = dutyCodes.find(d => d.code === code);
       const offset = days.indexOf(day);
+      const duty = (allDuties[day] || []).find(d => d.code === code);
       const [start, end] = parseDutyTime(duty.time, offset);
-      ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${duty.station}\n`;
+      ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${stationNames[duty.station] || duty.station}\n`;
       ics += `DTSTART:${toICSDate(start)}\n`;
       ics += `DTEND:${toICSDate(end)}\n`;
-      ics += `LOCATION:${duty.station}\n`;
+      ics += `LOCATION:${stationNames[duty.station] || duty.station}\n`;
       ics += `DESCRIPTION:${duty.code} - ${duty.time}\nEND:VEVENT\n`;
     });
     ics += 'END:VCALENDAR';
