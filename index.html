@@ -14,22 +14,24 @@
     }
     .week {
       display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 400px;
+      margin: auto;
     }
     .day {
-      flex: 1;
-      min-width: 140px;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      text-align: center;
     }
-    select {
+    .day select {
       width: 100%;
       margin-top: 10px;
+    }
+    .details {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #333;
     }
     button {
       padding: 10px 20px;
@@ -39,6 +41,8 @@
     .summary {
       margin-top: 30px;
       display: none;
+      max-width: 500px;
+      margin: 30px auto 0;
     }
     .summary-day {
       margin-bottom: 10px;
@@ -57,8 +61,10 @@
 
 <div class="week" id="week"></div>
 
-<button id="printBtn" disabled>Print</button>
-<button id="exportBtn" disabled>Export to Calendar</button>
+<div style="text-align: center;">
+  <button id="printBtn" disabled>Print</button>
+  <button id="exportBtn" disabled>Export to Calendar</button>
+</div>
 
 <div class="summary" id="summary">
   <h2>Weekly Duty Summary</h2>
@@ -112,30 +118,36 @@
 
   let selectedDuties = {};
 
-  // Render each day
+  // Render dropdowns and detail areas
   days.forEach(day => {
     const dayDiv = document.createElement('div');
     dayDiv.className = 'day';
-    dayDiv.innerHTML = `<strong>${day}</strong><br/>
+
+    dayDiv.innerHTML = `
+      <strong>${day}</strong><br/>
       <select data-day="${day}">
-        <option value="">-- Select Duty --</option>
-        ${dutyCodes.map(d =>
-          `<option value="${d.code}">${d.code} = ${d.station} - ${d.time.replace(' - ', ' until ')}</option>`
-        ).join('')}
-      </select>`;
+        <option value="">-- Select Duty Code --</option>
+        ${dutyCodes.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
+      </select>
+      <div class="details" id="details-${day}"></div>
+    `;
     weekContainer.appendChild(dayDiv);
   });
 
-  // Handle selection
+  // Handle dropdown change
   weekContainer.addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
       const day = e.target.dataset.day;
       const code = e.target.value;
+      const detailDiv = document.getElementById(`details-${day}`);
 
       if (code) {
+        const duty = dutyCodes.find(d => d.code === code);
         selectedDuties[day] = code;
+        detailDiv.textContent = `${duty.station} - ${duty.time}`;
       } else {
         delete selectedDuties[day];
+        detailDiv.textContent = '';
       }
 
       const valid = Object.keys(selectedDuties).length === 4;
@@ -144,26 +156,26 @@
     }
   });
 
-  // Print
+  // Summary print
   printBtn.addEventListener('click', () => {
     summaryContent.innerHTML = '';
     days.forEach(day => {
       const code = selectedDuties[day];
-      const detail = dutyCodes.find(d => d.code === code);
-      const dayDiv = document.createElement('div');
-      dayDiv.className = 'summary-day';
-      if (detail) {
-        dayDiv.innerHTML = `<strong>${day}:</strong> ${detail.code} = ${detail.station} - ${detail.time.replace(' - ', ' until ')}`;
+      const duty = dutyCodes.find(d => d.code === code);
+      const div = document.createElement('div');
+      div.className = 'summary-day';
+      if (duty) {
+        div.innerHTML = `<strong>${day}:</strong> ${duty.code} = ${duty.station} - ${duty.time}`;
       } else {
-        dayDiv.innerHTML = `<strong>${day}:</strong> RD`;
+        div.innerHTML = `<strong>${day}:</strong> RD`;
       }
-      summaryContent.appendChild(dayDiv);
+      summaryContent.appendChild(div);
     });
     summaryContainer.style.display = 'block';
     window.print();
   });
 
-  // Helper to parse time into Date
+  // Time parser
   function parseDutyTime(timeStr, dayOffset) {
     const [startStr, endStr] = timeStr.split(' - ');
     const today = new Date();
@@ -177,42 +189,38 @@
     endDate.setHours(eh, em, 0);
 
     if (endDate <= startDate) {
-      endDate.setDate(endDate.getDate() + 1); // Overnight
+      endDate.setDate(endDate.getDate() + 1);
     }
 
     return [startDate, endDate];
   }
 
-  // Export to calendar
+  // Export to ICS
   exportBtn.addEventListener('click', () => {
-    let icsContent = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
-
+    let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
     Object.entries(selectedDuties).forEach(([day, code]) => {
       const duty = dutyCodes.find(d => d.code === code);
       const dayIndex = days.indexOf(day);
       const [start, end] = parseDutyTime(duty.time, dayIndex);
 
-      const toICSDate = date =>
+      const formatDate = date =>
         date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
-      icsContent += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${duty.station}\n`;
-      icsContent += `DTSTART:${toICSDate(start)}\n`;
-      icsContent += `DTEND:${toICSDate(end)}\n`;
-      icsContent += `LOCATION:${duty.station}\n`;
-      icsContent += `DESCRIPTION:${duty.code} - ${duty.time}\n`;
-      icsContent += `END:VEVENT\n`;
+      ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${duty.station}\n`;
+      ics += `DTSTART:${formatDate(start)}\n`;
+      ics += `DTEND:${formatDate(end)}\n`;
+      ics += `LOCATION:${duty.station}\n`;
+      ics += `DESCRIPTION:${duty.code} - ${duty.time}\n`;
+      ics += `END:VEVENT\n`;
     });
+    ics += 'END:VCALENDAR';
 
-    icsContent += 'END:VCALENDAR';
-
-    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const blob = new Blob([ics], { type: 'text/calendar' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'weekly_duties.ics';
-    document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
 </script>
