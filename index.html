@@ -216,33 +216,37 @@
   }
 
   days.forEach((day, idx) => {
-    const list = day === 'Sunday'
-      ? dutiesSunday
-      : day === 'Saturday'
-      ? dutiesSaturday
-      : dutiesWeekday;
+  let list;
 
-    const div = document.createElement('div');
-    div.className = 'day';
-    const selectId = `select-${day}`;
+  // Assign duty set based on day
+  if (day === 'Sunday') {
+    list = dutiesSunday;
+  } else if (day === 'Saturday') {
+    list = dutiesSaturday;
+  } else {
+    list = dutiesWeekday;
+  }
 
-    div.innerHTML = `
-      <strong>${day}</strong><br/>
-      <select id="${selectId}" data-day="${day}">
-        <option value="">-- Select Duty Code --</option>
-        ${list.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
-      </select>
-      <div class="details" id="details-${day}"></div>
-    `;
-    weekContainer.appendChild(div);
+  const div = document.createElement('div');
+  div.className = 'day';
+  const selectId = `select-${day}`;
 
-    new TomSelect(`#${selectId}`, {
-      create: false,
-      sortField: { field: 'text', direction: 'asc' },
-      placeholder: "-- Select Duty Code --"
-    });
+  div.innerHTML = `
+    <strong>${day}</strong><br/>
+    <select id="${selectId}" data-day="${day}">
+      <option value="">-- Select Duty Code --</option>
+      ${list.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
+    </select>
+    <div class="details" id="details-${day}"></div>
+  `;
+  weekContainer.appendChild(div);
+
+  new TomSelect(`#${selectId}`, {
+    create: false,
+    sortField: { field: 'text', direction: 'asc' },
+    placeholder: "-- Select Duty Code --"
   });
-
+});
   weekContainer.addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
       const day = e.target.dataset.day;
@@ -328,3 +332,4 @@
 
 </body>
 </html>
+
