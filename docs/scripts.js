@@ -288,6 +288,47 @@ clearBtn.addEventListener('click', () => {
       details.textContent = '';
     }
   });
+  
+  // Copy weekly summary to clipboard
+copyBtn.addEventListener('click', async () => {
+  // Collect each summary line
+  const lines = Array.from(summaryContent.querySelectorAll('.summary-day'))
+    .map(div => div.innerText.trim())
+    .filter(Boolean);
+
+  const textToCopy = lines.join('\n');
+
+  if (!textToCopy) {
+    // Nothing to copy
+    copyMsg.textContent = 'Nothing to copy yet.';
+    copyMsg.style.display = 'block';
+    setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
+    return;
+  }
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(textToCopy);
+    } else {
+      // Fallback for older browsers
+      const tempArea = document.createElement('textarea');
+      tempArea.value = textToCopy;
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempArea);
+    }
+
+    copyMsg.textContent = 'Copied!';
+    copyMsg.style.display = 'block';
+    setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
+  } catch (err) {
+    console.error('Copy failed', err);
+    copyMsg.textContent = 'Copy failed';
+    copyMsg.style.display = 'block';
+    setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
+  }
+});
 
   Object.keys(selectedDuties).forEach(k => delete selectedDuties[k]);
   weekStartInput.value = '';
