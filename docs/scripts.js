@@ -163,11 +163,28 @@ days.forEach((day, idx) => {
   `;
   weekContainer.appendChild(div);
 
-  new TomSelect(`#${selectId}`, {
+new TomSelect(`#${selectId}`, {
   create: false,
   sortField: { field: 'text', direction: 'asc' },
   placeholder: "-- Select Duty Code --",
-  dropdownParent: 'body' // ✅ Forces dropdown into <body>, avoiding overlap
+  onDropdownOpen: function() {
+    // Reset all day containers
+    document.querySelectorAll('.day').forEach(day => {
+      day.style.zIndex = '1';
+    });
+
+    // Elevate only the parent of the active dropdown
+    const parentDay = this.control.closest('.day');
+    if (parentDay) {
+      parentDay.style.zIndex = '1000';
+    }
+  },
+  onDropdownClose: function() {
+    const parentDay = this.control.closest('.day');
+    if (parentDay) {
+      parentDay.style.zIndex = '1';
+    }
+  }
 });
 
   document.getElementById(selectId).addEventListener('change', () => {
