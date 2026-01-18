@@ -283,8 +283,8 @@ clearBtn.addEventListener('click', () => {
   exportBtn.disabled = true;
 });
 
-// ✅ Copy weekly summary to clipboard
-copyBtn.addEventListener('click', async () => {
+// ✅ Copy weekly summary to clipboard (simple, legacy-friendly version)
+copyBtn.addEventListener('click', () => {
   const lines = Array.from(summaryContent.querySelectorAll('.summary-day'))
     .map(div => div.innerText.trim())
     .filter(Boolean);
@@ -298,25 +298,28 @@ copyBtn.addEventListener('click', async () => {
     return;
   }
 
-  try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(textToCopy);
-    } else {
-      const tempArea = document.createElement('textarea');
-      tempArea.value = textToCopy;
-      document.body.appendChild(tempArea);
-      tempArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempArea);
-    }
+  // Create a hidden textarea, copy, then remove it
+  const tempArea = document.createElement('textarea');
+  tempArea.value = textToCopy;
+  tempArea.style.position = 'fixed';
+  tempArea.style.top = '-9999px';
+  document.body.appendChild(tempArea);
+  tempArea.focus();
+  tempArea.select();
 
-    copyMsg.textContent = 'Copied!';
-    copyMsg.style.display = 'block';
-    setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
+  let success = false;
+  try {
+    success = document.execCommand('copy');
   } catch (err) {
-    console.error('Copy failed', err);
-    copyMsg.textContent = 'Copy failed';
-    copyMsg.style.display = 'block';
-    setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
+    console.error('execCommand copy failed:', err);
   }
+  document.body.removeChild(tempArea);
+
+  if (success) {
+    copyMsg.textContent = 'Copied!';
+  } else {
+    copyMsg.textContent = 'Copy failed';
+  }
+  copyMsg.style.display = 'block';
+  setTimeout(() => { copyMsg.style.display = 'none'; }, 2000);
 });
