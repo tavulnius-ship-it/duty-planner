@@ -15,11 +15,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  /* --- Base Typography & Color --- */
   body {
     font-family: 'Inter', sans-serif;
-    background: #F7F8FA;
-    color: #2E2E2E;
+    background: #F9FAFB;
+    color: #1F2937;
     margin: 0;
     padding: 20px;
   }
@@ -28,7 +27,7 @@
     font-size: 1.9rem;
     font-weight: 700;
     text-align: center;
-    color: #111827;
+    color: #1F2937;
     margin-bottom: 10px;
   }
 
@@ -41,7 +40,7 @@
     font-weight: 600;
     display: block;
     margin-bottom: 6px;
-    color: #333;
+    color: #1F2937;
     font-size: 16px;
   }
 
@@ -49,13 +48,14 @@
     width: 100%;
     padding: 8px 10px;
     font-size: 15px;
-    border: 1px solid #CBD5E0;
+    border: 1px solid #E5E7EB;
     border-radius: 6px;
     margin-bottom: 15px;
     font-family: 'Inter', sans-serif;
+    background-color: #FFFFFF;
+    color: #1F2937;
   }
 
-  /* --- Duty Cards --- */
   .week {
     display: flex;
     flex-direction: column;
@@ -68,14 +68,16 @@
     background: #FFFFFF;
     padding: 14px 16px;
     border-radius: 8px;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    z-index: 1;
   }
 
   .day:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   }
 
   .day strong {
@@ -86,7 +88,7 @@
   .details {
     margin-top: 6px;
     font-size: 0.95rem;
-    color: #4A4A4A;
+    color: #4B5563;
   }
 
   select {
@@ -95,26 +97,32 @@
     border-radius: 6px;
     font-size: 15px;
     font-family: 'Inter', sans-serif;
-    border: 1px solid #CBD5E0;
+    border: 1px solid #E5E7EB;
     background: #FFFFFF;
-    color: #2A2A2A;
+    color: #1F2937;
   }
 
-  /* Tom Select override */
+  /* Tom Select overrides */
   .ts-control {
     border-radius: 6px !important;
-    border: 1px solid #CBD5E0 !important;
+    border: 1px solid #E5E7EB !important;
     background: #FFFFFF !important;
+    font-size: 15px;
+  }
+
+  .ts-dropdown {
+    z-index: 1000 !important;
+    font-size: 15px;
   }
 
   .ts-dropdown .ts-option {
-    font-size: 15px;
     padding: 6px 10px;
+    color: #1F2937;
   }
 
   /* --- Buttons --- */
   button {
-    background-color: #4F46E5;
+    background-color: #6366F1;
     color: white;
     border: none;
     border-radius: 6px;
@@ -131,7 +139,7 @@
   }
 
   button:hover:not(:disabled) {
-    background-color: #4338CA;
+    background-color: #4F46E5;
   }
 
   /* --- Summary --- */
@@ -140,13 +148,13 @@
     padding: 15px;
     background: #FFFFFF;
     border-radius: 8px;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #E5E7EB;
   }
 
   .summary h2 {
     font-size: 1.4rem;
     margin-bottom: 12px;
-    color: #111827;
+    color: #1F2937;
     border-bottom: 1px solid #E5E7EB;
     padding-bottom: 6px;
   }
@@ -155,10 +163,11 @@
     margin-bottom: 12px;
     padding-bottom: 8px;
     border-bottom: 1px solid #E5E7EB;
+    color: #374151;
   }
 
   .summary-day strong {
-    width: 160px;
+    width: 180px;
     display: inline-block;
     font-weight: 600;
     color: #1E293B;
@@ -182,6 +191,43 @@
       width: 180px;
     }
   }
+/* --- Responsive Scaling --- */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .summary-day strong {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  input[type="date"],
+  select {
+    font-size: 15px;
+  }
+}
 </style>
 </head>
 <body>
@@ -475,4 +521,5 @@
 
 </body>
 </html>
+
 
