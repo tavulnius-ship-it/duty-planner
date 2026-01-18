@@ -9,10 +9,10 @@
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
-<!-- Professional Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Professional Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   /* === Color Palette Variables === */
@@ -41,7 +41,6 @@
     font-size: 1.9rem;
     font-weight: 700;
     text-align: center;
-    color: var(--text-primary);
     margin-bottom: 10px;
   }
 
@@ -83,7 +82,6 @@
     border-radius: 8px;
     border: 1px solid var(--border);
     box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
     position: relative;
     z-index: 1;
   }
@@ -95,7 +93,6 @@
 
   .day strong {
     font-size: 1.05rem;
-    color: var(--text-primary);
   }
 
   .details {
@@ -114,7 +111,7 @@
     color: var(--text-primary);
   }
 
-  /* ===== Tom Select Overrides ===== */
+  /* ==== Tom Select Overrides ==== */
   .ts-control {
     border-radius: 6px !important;
     border: 1px solid var(--border) !important;
@@ -123,18 +120,21 @@
     font-size: 15px;
   }
 
+  /* Force dropdown above all other elements */
   .ts-dropdown {
-    z-index: 9999 !important;
+    z-index: 99999 !important;
     position: absolute !important;
-    font-size: 15px;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
   }
 
   .ts-dropdown .ts-option {
     padding: 6px 10px;
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
   }
 
   .ts-dropdown .ts-option:hover,
+  .ts-dropdown .ts-option.selected,
   .ts-dropdown .ts-option.active {
     background-color: var(--dropdown-hover) !important;
     color: var(--dropdown-text) !important;
@@ -165,6 +165,7 @@
 
   /* === Summary === */
   .summary {
+    display: none;
     margin-top: 28px;
     padding: 15px;
     background: var(--bg-card);
@@ -194,7 +195,6 @@
     color: var(--text-primary);
   }
 
-  /* === Copy to Clipboard Feedback === */
   #copyMsg {
     color: green;
     font-size: 14px;
@@ -219,12 +219,8 @@
   }
 
   /* === Responsive Scaling === */
-  html {
-    font-size: 16px;
-  }
-  @media (max-width: 768px) {
-    html { font-size: 15px; }
-  }
+  html { font-size: 16px; }
+  @media (max-width: 768px) { html { font-size: 15px; } }
   @media (max-width: 480px) {
     html { font-size: 14px; }
     .container { padding: 0 15px; }
@@ -235,7 +231,7 @@
 </style>
 </head>
 <body>
-
+  
 <div class="container">
   <h1>Weekly Duty Planner</h1>
 
@@ -560,5 +556,6 @@ clearBtn.addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
