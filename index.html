@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Duty Planner</title>
 
-  <!-- Tom Select (searchable) -->
+  <!-- Tom Select (searchable dropdowns) -->
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
@@ -18,7 +18,7 @@
       text-align: center;
     }
     .container {
-      max-width: 500px;
+      max-width: 550px;
       margin: auto;
     }
     .week {
@@ -53,7 +53,7 @@
     }
     .summary-day strong {
       display: inline-block;
-      width: 100px;
+      width: 170px;
     }
   </style>
 </head>
@@ -68,7 +68,7 @@
   <div class="week" id="week"></div>
 
   <div style="text-align: center;">
-    <button id="printBtn" disabled>Print</button>
+    <button id="printBtn" disabled>Show Summary</button>
     <button id="exportBtn" disabled>Export to Calendar</button>
   </div>
 
@@ -116,7 +116,7 @@
     { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
     { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
     { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
-    { code: '1121/1122', station: 'HAY', time: '1500 - 0000' }
+    { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
   ];
 
   const dutiesSaturday = [
@@ -166,7 +166,7 @@
     { code: '02-0/02-1', station: 'CHI', time: '1500 - 0000' },
     { code: '03-0/03-1', station: 'SSS', time: '1500 - 0000' },
     { code: '04X/Y', station: 'HTH', time: '1500 - 0000' },
-    { code: '05-0/05-1', station: 'GHD', time: '1500 - 0000' },
+    { code: '05-1/05-2', station: 'GHD', time: '1500 - 0000' },
     { code: '06X/Y', station: 'CEN', time: '1500 - 0000' },
     { code: '07X/Y', station: 'MMT', time: '1500 - 0000' },
     { code: '08X/Y', station: 'SJM', time: '1500 - 0000' },
@@ -183,6 +183,16 @@
   const exportBtn = document.getElementById('exportBtn');
   const summaryContainer = document.getElementById('summary');
   const summaryContent = document.getElementById('summaryContent');
+
+  function getDaySuffix(day) {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  }
 
   function isValidWeekStart(dateStr) {
     const date = new Date(dateStr);
@@ -216,40 +226,36 @@
   }
 
   days.forEach((day, idx) => {
-  let list;
+    const list = day === 'Sunday'
+      ? dutiesSunday
+      : day === 'Saturday'
+      ? dutiesSaturday
+      : dutiesWeekday;
 
-  // Assign duty set based on day
-  if (day === 'Sunday') {
-    list = dutiesSunday;
-  } else if (day === 'Saturday') {
-    list = dutiesSaturday;
-  } else {
-    list = dutiesWeekday;
-  }
+    const div = document.createElement('div');
+    div.className = 'day';
+    const selectId = `select-${day}`;
 
-  const div = document.createElement('div');
-  div.className = 'day';
-  const selectId = `select-${day}`;
+    div.innerHTML = `
+      <strong>${day}</strong><br/>
+      <select id="${selectId}" data-day="${day}">
+        <option value="">-- Select Duty Code --</option>
+        ${list.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
+      </select>
+      <div class="details" id="details-${day}"></div>
+    `;
+    weekContainer.appendChild(div);
 
-  div.innerHTML = `
-    <strong>${day}</strong><br/>
-    <select id="${selectId}" data-day="${day}">
-      <option value="">-- Select Duty Code --</option>
-      ${list.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
-    </select>
-    <div class="details" id="details-${day}"></div>
-  `;
-  weekContainer.appendChild(div);
-
-  new TomSelect(`#${selectId}`, {
-    create: false,
-    sortField: { field: 'text', direction: 'asc' },
-    placeholder: "-- Select Duty Code --"
+    new TomSelect(`#${selectId}`, {
+      create: false,
+      sortField: { field: 'text', direction: 'asc' },
+      placeholder: "-- Select Duty Code --"
+    });
   });
-});
+
   weekContainer.addEventListener('change', (e) => {
     if (e.target.tagName === 'SELECT') {
-      const day = e.target.dataset.day;
+      const day = e.target.dataset-day;
       const val = e.target.value;
       const list = day === 'Sunday'
         ? dutiesSunday
@@ -272,52 +278,55 @@
   });
 
   weekStartInput.addEventListener('change', () => {
-  if (!weekStartInput.value) return;
-
-  const selected = new Date(weekStartInput.value);
-  const day = selected.getDay();
-
-  // If not Sunday, push forward to next Sunday
-  if (day !== 0) {
-    const daysToAdd = 7 - day;
-    selected.setDate(selected.getDate() + daysToAdd);
-    weekStartInput.value = selected.toISOString().split('T')[0];
-  }
-
-  updateButtons();
-});
+    if (!weekStartInput.value) return;
+    const selected = new Date(weekStartInput.value);
+    const day = selected.getDay();
+    if (day !== 0) {
+      const daysToAdd = 7 - day;
+      selected.setDate(selected.getDate() + daysToAdd);
+      weekStartInput.value = selected.toISOString().split('T')[0];
+    }
+    updateButtons();
+  });
 
   printBtn.addEventListener('click', () => {
     summaryContent.innerHTML = '';
-    days.forEach(day => {
-      const code = selectedDuties[day];
+    const weekStart = new Date(weekStartInput.value);
+
+    days.forEach((day, idx) => {
       const dutyList = day === 'Sunday'
         ? dutiesSunday
         : day === 'Saturday'
         ? dutiesSaturday
         : dutiesWeekday;
+      const code = selectedDuties[day];
       const duty = dutyList.find(d => d.code === code);
+
+      const dateForDay = new Date(weekStart);
+      dateForDay.setDate(weekStart.getDate() + idx);
+      const dateStr = `${day} ${dateForDay.getDate()}${getDaySuffix(dateForDay.getDate())}`;
+
       const div = document.createElement('div');
       div.className = 'summary-day';
       div.innerHTML = duty
-        ? `<strong>${day}:</strong> ${duty.code} = ${stationNames[duty.station] || duty.station} - ${duty.time}`
-        : `<strong>${day}:</strong> RD`;
+        ? `<strong>${dateStr}:</strong> ${duty.code} = ${stationNames[duty.station] || duty.station} - ${duty.time}`
+        : `<strong>${dateStr}:</strong> RD`;
       summaryContent.appendChild(div);
     });
+
     summaryContainer.style.display = 'block';
-    // no window.print()
   });
 
   exportBtn.addEventListener('click', () => {
     let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
     Object.entries(selectedDuties).forEach(([day, code]) => {
-      const dutyList = day === 'Sunday'
+      const list = day === 'Sunday'
         ? dutiesSunday
         : day === 'Saturday'
         ? dutiesSaturday
         : dutiesWeekday;
-      const duty = dutyList.find(d => d.code === code);
-      const offset = days.indexOf(day);
+      const duty = list.find(d => d.code === code);
+      const offset = days.indexOf(day); 
       const [start, end] = parseDutyTime(duty.time, offset);
 
       ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${stationNames[duty.station] || duty.station}\n`;
@@ -325,7 +334,6 @@
       ics += `LOCATION:${stationNames[duty.station] || duty.station}\n`;
       ics += `DESCRIPTION:${duty.code} - ${duty.time}\nEND:VEVENT\n`;
     });
-
     ics += 'END:VCALENDAR';
 
     const blob = new Blob([ics], { type: 'text/calendar' });
@@ -340,7 +348,3 @@
 
 </body>
 </html>
-
-
-
-
