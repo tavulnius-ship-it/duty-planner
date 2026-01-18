@@ -146,13 +146,13 @@ function toICSDate(date) {
   return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 }
 
-// === Build UI and attach dropdown handlers
 days.forEach((day, idx) => {
   const list = day === 'Sunday' ? dutiesSunday : day === 'Saturday' ? dutiesSaturday : dutiesWeekday;
-  const selectId = `select-${day}`;
 
   const div = document.createElement('div');
   div.className = 'day';
+  const selectId = `select-${day}`;
+
   div.innerHTML = `
     <strong>${day}</strong><br/>
     <select id="${selectId}" data-day="${day}">
@@ -169,23 +169,16 @@ days.forEach((day, idx) => {
     placeholder: "-- Select Duty Code --"
   });
 
-  // ✅ Use data-day attribute for safe scope
-  document.getElementById(selectId).addEventListener('change', (e) => {
-    const selectedDay = e.target.dataset.day;
-    const val = e.target.value;
-    const dutyList =
-      selectedDay === 'Sunday' ? dutiesSunday :
-      selectedDay === 'Saturday' ? dutiesSaturday :
-      dutiesWeekday;
-
-    const duty = dutyList.find(d => d.code === val);
-    const detailDiv = document.getElementById(`details-${selectedDay}`);
+  document.getElementById(selectId).addEventListener('change', () => {
+    const val = document.getElementById(selectId).value;
+    const duty = list.find(d => d.code === val);
+    const detailDiv = document.getElementById(`details-${day}`);
 
     if (val && duty) {
-      selectedDuties[selectedDay] = val;
-      detailDiv.textContent = `${stationNames[duty.station]} - ${duty.time}`;
+      selectedDuties[day] = val;
+      detailDiv.textContent = `${stationNames[duty.station] || duty.station} - ${duty.time}`;
     } else {
-      delete selectedDuties[selectedDay];
+      delete selectedDuties[day];
       detailDiv.textContent = '';
     }
 
@@ -210,7 +203,11 @@ printBtn.addEventListener('click', () => {
   const weekStart = new Date(weekStartInput.value);
 
   days.forEach((day, idx) => {
-    const dutyList = day === 'Sunday' ? dutiesSunday : day === 'Saturday' ? dutiesSaturday : dutiesWeekday;
+    const dutyList = day === 'Sunday'
+      ? dutiesSunday
+      : day === 'Saturday'
+      ? dutiesSaturday
+      : dutiesWeekday;
     const code = selectedDuties[day];
     const duty = dutyList.find(d => d.code === code);
 
@@ -221,7 +218,7 @@ printBtn.addEventListener('click', () => {
     const div = document.createElement('div');
     div.className = 'summary-day';
     div.innerHTML = duty
-      ? `<strong>${dateStr}:</strong> ${duty.code} = ${stationNames[duty.station]} - ${duty.time}`
+      ? `<strong>${dateStr}:</strong> ${duty.code} = ${stationNames[duty.station] || duty.station} - ${duty.time}`
       : `<strong>${dateStr}:</strong> RD`;
     summaryContent.appendChild(div);
   });
@@ -233,14 +230,18 @@ printBtn.addEventListener('click', () => {
 exportBtn.addEventListener('click', () => {
   let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
   Object.entries(selectedDuties).forEach(([day, code]) => {
-    const dutyList = day === 'Sunday' ? dutiesSunday : day === 'Saturday' ? dutiesSaturday : dutiesWeekday;
-    const duty = dutyList.find(d => d.code === code);
+    const list = day === 'Sunday'
+      ? dutiesSunday
+      : day === 'Saturday'
+      ? dutiesSaturday
+      : dutiesWeekday;
+    const duty = list.find(d => d.code === code);
     const offset = days.indexOf(day);
     const [start, end] = parseDutyTime(duty.time, offset);
 
-    ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${stationNames[duty.station]}\n`;
+    ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${stationNames[duty.station] || duty.station}\n`;
     ics += `DTSTART:${toICSDate(start)}\nDTEND:${toICSDate(end)}\n`;
-    ics += `LOCATION:${stationNames[duty.station]}\n`;
+    ics += `LOCATION:${stationNames[duty.station] || duty.station}\n`;
     ics += `DESCRIPTION:${duty.code} - ${duty.time}\nEND:VEVENT\n`;
   });
   ics += 'END:VCALENDAR';
@@ -254,7 +255,9 @@ exportBtn.addEventListener('click', () => {
   URL.revokeObjectURL(url);
 });
 
-document.getElementById('clearBtn').addEventListener('click', () => {
+const clearBtn = document.getElementById('clearBtn');
+
+clearBtn.addEventListener('click', () => {
   if (!confirm("Are you sure you want to clear all selections and reset the planner?")) return;
 
   days.forEach(day => {
@@ -262,7 +265,6 @@ document.getElementById('clearBtn').addEventListener('click', () => {
     if (select && select.tomselect) {
       select.tomselect.clear();
     }
-
     const details = document.getElementById(`details-${day}`);
     if (details) {
       details.textContent = '';
@@ -275,5 +277,25 @@ document.getElementById('clearBtn').addEventListener('click', () => {
   summaryContainer.style.display = 'none';
   copyBtn.style.display = 'none';
   copyMsg.style.display = 'none';
-  updateButtons();
+  printBtn.disabled = true;
+  exportBtn.disabled = true;
+});
+
+
+// ✅ FIX: Elevate parent .day container when a dropdown is clicked
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.ts-wrapper').forEach(wrapper => {
+    wrapper.addEventListener('click', () => {
+      // Reset all .day z-indexes
+      document.querySelectorAll('.day').forEach(day => {
+        day.style.zIndex = '1';
+      });
+
+      // Elevate the parent .day of the active dropdown
+      const parentDay = wrapper.closest('.day');
+      if (parentDay) {
+        parentDay.style.zIndex = '1000';
+      }
+    });
+  });
 });
