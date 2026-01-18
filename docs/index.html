@@ -15,18 +15,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* === Color Palette Variables === */
+    /* === Dark Color Palette (ChatGPT-ish) === */
     :root {
-      --bg-page: #F9FAFB;
-      --bg-card: #FFFFFF;
-      --border: #E5E7EB;
-      --text-primary: #1F2937;
-      --text-secondary: #4B5563;
-      --accent: #6366F1;
-      --accent-hover: #4F46E5;
-      --accent-disabled: #A5B4FC;
-      --dropdown-hover: #E0E7FF;
-      --dropdown-text: #1E3A8A;
+      --bg-page: #020617;            /* overall page background (very dark navy) */
+      --bg-card: #111827;            /* cards / inputs / summary */
+      --border: #1f2937;             /* borders & dividers */
+      --border-subtle: #0f172a;      /* subtle inner lines */
+      --text-primary: #e5e7eb;       /* main text */
+      --text-secondary: #9ca3af;     /* secondary text */
+      --muted: #6b7280;             /* labels, hints */
+
+      /* pastel accent (soft purple) */
+      --accent: #2dd4bf;
+      --accent-hover: #5eead4;
+      --accent-disabled: #4b5563;
+
+      /* dropdown states */
+      --dropdown-bg: #020617;
+      --dropdown-hover: #1f2937;
+      --dropdown-text: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -34,7 +45,7 @@
       background: var(--bg-page);
       color: var(--text-primary);
       margin: 0;
-      padding: 20px;
+      padding: 24px 16px;
     }
 
     h1 {
@@ -42,64 +53,79 @@
       font-weight: 700;
       text-align: center;
       color: var(--text-primary);
-      margin-bottom: 10px;
+      margin-bottom: 18px;
     }
 
     .container {
-      max-width: 600px;
-      margin: auto;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 20px 32px;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #020617 100%);
+      border-radius: 16px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--border-subtle);
     }
 
     label {
-      font-weight: 600;
-      color: var(--text-primary);
+      font-weight: 500;
+      color: var(--muted);
       display: block;
       margin-bottom: 6px;
-      font-size: 16px;
+      font-size: 0.95rem;
     }
 
     input[type="date"] {
       width: 100%;
-      padding: 8px 10px;
+      padding: 10px 12px;
       font-size: 15px;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 15px;
+      border-radius: 10px;
+      margin-bottom: 18px;
       background-color: var(--bg-card);
       color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="date"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.5);
     }
 
     .week {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      margin-top: 8px;
-      margin-bottom: 10px;
+      gap: 16px;
+      margin-top: 4px;
+      margin-bottom: 12px;
     }
 
     .day {
       background: var(--bg-card);
-      padding: 14px 16px;
-      border-radius: 8px;
+      padding: 12px 14px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
       position: relative;
     }
 
     .day:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55);
+      border-color: var(--accent);
     }
 
     .day strong {
-      font-size: 1.05rem;
+      font-size: 1rem;
       color: var(--text-primary);
+      display: block;
+      margin-bottom: 6px;
     }
 
     .details {
       margin-top: 6px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
     }
 
@@ -107,32 +133,40 @@
       width: 100%;
       padding: 7px 8px;
       font-size: 15px;
-      border-radius: 6px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text-primary);
     }
 
-    /* === Tom Select Styling Fixes === */
+    /* ===== Tom Select Overrides ===== */
     .ts-control {
-      border-radius: 6px !important;
+      border-radius: 8px !important;
       border: 1px solid var(--border) !important;
       background: var(--bg-card) !important;
       color: var(--text-primary) !important;
       font-size: 15px;
+      min-height: 40px;
+    }
+
+    .ts-control input {
+      color: var(--text-primary) !important;
     }
 
     .ts-dropdown {
       margin-top: 2px !important;
       z-index: 99999 !important;
       position: absolute !important;
-      background: white !important;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 15px;
+      background: var(--dropdown-bg) !important;
+      border-radius: 10px !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
     }
 
     .ts-dropdown .ts-option {
       padding: 6px 10px;
-      color: var(--text-primary);
+      color: var(--dropdown-text);
     }
 
     .ts-dropdown .ts-option:hover,
@@ -142,64 +176,82 @@
       font-weight: 500;
     }
 
-    /* === Buttons === */
+    /* === Buttons (pastel accent) === */
     button {
-      background-color: var(--accent);
-      color: white;
+      background: var(--accent);
+      color: #0b1120;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 999px;
+      font-size: 15px;
       font-weight: 600;
-      padding: 10px 18px;
+      padding: 9px 18px;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease;
       margin: 4px;
+      box-shadow: 0 10px 25px rgba(168, 85, 247, 0.45);
     }
 
     button:hover:not(:disabled) {
-      background-color: var(--accent-hover);
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(168, 85, 247, 0.55);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.7);
     }
 
     button:disabled {
-      background-color: var(--accent-disabled);
+      background: var(--accent-disabled);
+      color: var(--text-secondary);
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     /* === Summary Box === */
     .summary {
-      margin-top: 28px;
-      padding: 15px;
-      background: var(--bg-card);
-      border-radius: 8px;
+      margin-top: 26px;
+      padding: 16px 18px 18px;
+      background: #020617;
+      border-radius: 14px;
       border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.75);
     }
 
     .summary h2 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: var(--text-primary);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       border-bottom: 1px solid var(--border);
       padding-bottom: 6px;
     }
 
     .summary-day {
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-subtle);
       color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .summary-day:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
     }
 
     .summary-day strong {
       display: inline-block;
-      width: 180px;
+      min-width: 180px;
       font-weight: 600;
       color: var(--text-primary);
     }
 
-    /* === Copy Feedback === */
     #copyMsg {
-      color: green;
-      font-size: 14px;
+      color: var(--accent-hover);
+      font-size: 0.85rem;
+      margin-top: 6px;
     }
 
     /* === Print Styles === */
@@ -207,12 +259,21 @@
       body {
         background: white;
         color: black;
+        padding: 0;
       }
-      .container, .week, button, input, select, .ts-control {
+      .container {
+        box-shadow: none;
+        border-radius: 0;
+        background: white;
+      }
+      .week, button, input, select, .ts-control {
         all: unset;
       }
       .summary {
         display: block !important;
+        box-shadow: none;
+        background: white;
+        border-color: #d1d5db;
       }
       .summary-day strong {
         display: inline-block;
@@ -220,36 +281,29 @@
       }
     }
 
-    /* === Responsive Scaling === */
+    /* === Responsive === */
     html {
       font-size: 16px;
     }
     @media (max-width: 768px) {
       html { font-size: 15px; }
+      .container { padding: 16px 14px 24px; }
     }
     @media (max-width: 480px) {
       html { font-size: 14px; }
-      .container { padding: 0 15px; }
+      body { padding: 16px 8px; }
+      .container { padding: 14px 12px 22px; }
       button {
         display: block;
         width: 100%;
-        margin-bottom: 10px;
+        margin: 6px 0;
       }
       .summary-day strong {
         display: block;
         width: 100%;
-        margin-bottom: 4px;
-      }
-      input[type="date"], select {
-        font-size: 15px;
+        margin-bottom: 2px;
       }
     }
-    /* === FIX FOR DROPDOWN CLIPPING === */
-body,
-.container {
-  overflow: visible !important;
-  position: static !important;
-}
   </style>
 </head>
 <body>
@@ -257,12 +311,12 @@ body,
   <div class="container">
     <h1>Weekly Duty Planner</h1>
 
-    <label for="weekStart"><strong>Week Commencing (Sunday):</strong></label>
+    <label for="weekStart">Week Commencing (Sunday):</label>
     <input type="date" id="weekStart" />
 
     <div class="week" id="week"></div>
 
-    <div style="text-align: center;">
+    <div style="text-align: center; margin-top: 8px;">
       <button id="printBtn" disabled>Show Summary</button>
       <button id="exportBtn" disabled>Export to Calendar</button>
       <button id="clearBtn">Clear All</button>
@@ -275,7 +329,7 @@ body,
       <div id="copyMsg" style="display: none;">Copied!</div>
     </div>
   </div>
-
+  
   <!-- Load script with all functionality -->
   <script src="./scripts.js"></script>
 </body>
