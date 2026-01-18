@@ -35,7 +35,7 @@ const dutiesSunday = [
   { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
   { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
   { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
-  { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
+  { code: '1120/1121', station: 'HAY', time: '1500 - 0000' }
 ];
 
 const dutiesSaturday = [
