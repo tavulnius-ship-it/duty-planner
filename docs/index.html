@@ -9,254 +9,268 @@
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
-<!-- Professional Font -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Professional Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-  /* === Color Palette Variables === */
-  :root {
-    --bg-page: #F9FAFB;            /* Page background */
-    --bg-card: #FFFFFF;            /* Card / inputs / summary */
-    --border: #E5E7EB;             /* Borders and dividers */
-    --text-primary: #1F2937;       /* Main text */
-    --text-secondary: #4B5563;     /* Details / secondary text */
-    --accent: #6366F1;             /* Buttons / focus */
-    --accent-hover: #4F46E5;       /* Button hover */
-    --accent-disabled: #A5B4FC;    /* Disabled state */
-    --dropdown-hover: #E0E7FF;     /* Dropdown highlight */
-    --dropdown-text: #1E3A8A;      /* Dropdown highlight text */
-  }
+  <style>
+    /* === Color Palette Variables === */
+    :root {
+      --bg-page: #F9FAFB;
+      --bg-card: #FFFFFF;
+      --border: #E5E7EB;
+      --text-primary: #1F2937;
+      --text-secondary: #4B5563;
+      --accent: #6366F1;
+      --accent-hover: #4F46E5;
+      --accent-disabled: #A5B4FC;
+      --dropdown-hover: #E0E7FF;
+      --dropdown-text: #1E3A8A;
+    }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg-page);
-    color: var(--text-primary);
-    margin: 0;
-    padding: 20px;
-  }
-
-  h1 {
-    font-size: 1.9rem;
-    font-weight: 700;
-    text-align: center;
-    color: var(--text-primary);
-    margin-bottom: 10px;
-  }
-
-  .container {
-    max-width: 600px;
-    margin: auto;
-  }
-
-  label {
-    font-weight: 600;
-    color: var(--text-primary);
-    display: block;
-    margin-bottom: 6px;
-    font-size: 16px;
-  }
-
-  input[type="date"] {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 15px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 15px;
-    background-color: var(--bg-card);
-    color: var(--text-primary);
-  }
-
-  .week {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 8px;
-    margin-bottom: 10px;
-  }
-
-  .day {
-    background: var(--bg-card);
-    padding: 14px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    position: relative;
-    z-index: 1;
-  }
-
-  .day:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-  }
-
-  .day strong {
-    font-size: 1.05rem;
-    color: var(--text-primary);
-  }
-
-  .details {
-    margin-top: 6px;
-    font-size: 0.95rem;
-    color: var(--text-secondary);
-  }
-
-  select {
-    width: 100%;
-    padding: 7px 8px;
-    font-size: 15px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--bg-card);
-    color: var(--text-primary);
-  }
-
-  /* ===== Tom Select Overrides ===== */
-  .ts-control {
-    border-radius: 6px !important;
-    border: 1px solid var(--border) !important;
-    background: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-    font-size: 15px;
-  }
-
-.ts-dropdown {
-  z-index: 99999 !important;
-  background: white !important;
-  }
-
-  .ts-dropdown .ts-option {
-    padding: 6px 10px;
-    color: var(--text-primary);
-  }
-
-  .ts-dropdown .ts-option:hover,
-  .ts-dropdown .ts-option.active {
-    background-color: var(--dropdown-hover) !important;
-    color: var(--dropdown-text) !important;
-    font-weight: 500;
-  }
-
-  /* === Buttons === */
-  button {
-    background-color: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 10px 18px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  button:hover:not(:disabled) {
-    background-color: var(--accent-hover);
-  }
-
-  button:disabled {
-    background-color: var(--accent-disabled);
-    cursor: not-allowed;
-  }
-
-  /* === Summary === */
-  .summary {
-    margin-top: 28px;
-    padding: 15px;
-    background: var(--bg-card);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-  }
-
-  .summary h2 {
-    font-size: 1.4rem;
-    color: var(--text-primary);
-    margin-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 6px;
-  }
-
-  .summary-day {
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-secondary);
-  }
-
-  .summary-day strong {
-    display: inline-block;
-    width: 180px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-
-  /* === Copy to Clipboard Feedback === */
-  #copyMsg {
-    color: green;
-    font-size: 14px;
-  }
-
-  /* === Print Styles === */
-  @media print {
     body {
-      background: white;
-      color: black;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 20px;
     }
-    .container, .week, button, input, select, .ts-control {
-      all: unset;
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-primary);
+      margin-bottom: 10px;
     }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    label {
+      font-weight: 600;
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    input[type="date"] {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .week {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .day {
+      background: var(--bg-card);
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .day:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .day strong {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+
+    .details {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    select {
+      width: 100%;
+      padding: 7px 8px;
+      font-size: 15px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    /* === Tom Select Styling Fixes === */
+    .ts-control {
+      border-radius: 6px !important;
+      border: 1px solid var(--border) !important;
+      background: var(--bg-card) !important;
+      color: var(--text-primary) !important;
+      font-size: 15px;
+    }
+
+    .ts-dropdown {
+      z-index: 99999 !important;
+      position: absolute !important;
+      background: white !important;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .ts-dropdown .ts-option {
+      padding: 6px 10px;
+      color: var(--text-primary);
+    }
+
+    .ts-dropdown .ts-option:hover,
+    .ts-dropdown .ts-option.active {
+      background-color: var(--dropdown-hover) !important;
+      color: var(--dropdown-text) !important;
+      font-weight: 500;
+    }
+
+    /* === Buttons === */
+    button {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin: 4px;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+
+    button:disabled {
+      background-color: var(--accent-disabled);
+      cursor: not-allowed;
+    }
+
+    /* === Summary Box === */
     .summary {
-      display: block !important;
+      margin-top: 28px;
+      padding: 15px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
     }
+
+    .summary h2 {
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    .summary-day {
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
     .summary-day strong {
       display: inline-block;
       width: 180px;
+      font-weight: 600;
+      color: var(--text-primary);
     }
-  }
 
-  /* === Responsive Scaling === */
-  html {
-    font-size: 16px;
-  }
-  @media (max-width: 768px) {
-    html { font-size: 15px; }
-  }
-  @media (max-width: 480px) {
-    html { font-size: 14px; }
-    .container { padding: 0 15px; }
-    button { display: block; width: 100%; margin-bottom: 10px; }
-    .summary-day strong { display: block; width: 100%; margin-bottom: 4px; }
-    input[type="date"], select { font-size: 15px; }
-  }
-</style>
+    /* === Copy Feedback === */
+    #copyMsg {
+      color: green;
+      font-size: 14px;
+    }
+
+    /* === Print Styles === */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      .container, .week, button, input, select, .ts-control {
+        all: unset;
+      }
+      .summary {
+        display: block !important;
+      }
+      .summary-day strong {
+        display: inline-block;
+        width: 180px;
+      }
+    }
+
+    /* === Responsive Scaling === */
+    html {
+      font-size: 16px;
+    }
+    @media (max-width: 768px) {
+      html { font-size: 15px; }
+    }
+    @media (max-width: 480px) {
+      html { font-size: 14px; }
+      .container { padding: 0 15px; }
+      button {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .summary-day strong {
+        display: block;
+        width: 100%;
+        margin-bottom: 4px;
+      }
+      input[type="date"], select {
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Weekly Duty Planner</h1>
+  <div class="container">
+    <h1>Weekly Duty Planner</h1>
 
-  <label for="weekStart"><strong>Week Commencing (Sunday):</strong></label>
-  <input type="date" id="weekStart" />
+    <label for="weekStart"><strong>Week Commencing (Sunday):</strong></label>
+    <input type="date" id="weekStart" />
 
-  <div class="week" id="week"></div>
+    <div class="week" id="week"></div>
 
-  <div style="text-align: center;">
-    <button id="printBtn" disabled>Show Summary</button>
-    <button id="exportBtn" disabled>Export to Calendar</button>
-    <button id="clearBtn">Clear All</button>
+    <div style="text-align: center;">
+      <button id="printBtn" disabled>Show Summary</button>
+      <button id="exportBtn" disabled>Export to Calendar</button>
+      <button id="clearBtn">Clear All</button>
+    </div>
+
+    <div class="summary" id="summary" style="display: none;">
+      <h2>Weekly Duty Summary</h2>
+      <div id="summaryContent"></div>
+      <button id="copyBtn" style="margin-top: 12px; display: none;">Copy to Clipboard</button>
+      <div id="copyMsg" style="display: none;">Copied!</div>
+    </div>
   </div>
 
-  <div class="summary" id="summary" style="display: none;">
-  <h2>Weekly Duty Summary</h2>
-  <div id="summaryContent"></div>
-  <!-- Copy to Clipboard -->
-  <button id="copyBtn" style="margin-top: 12px; display: none;">Copy to Clipboard</button>
-  <div id="copyMsg" style="color: green; font-size: 14px; margin-top: 6px; display: none;">Copied!</div>
-</div>
-<script src="./scripts.js"></script>
+  <!-- Load script with all functionality -->
+  <script src="./scripts.js"></script>
 </body>
 </html>
-
