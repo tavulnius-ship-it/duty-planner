@@ -15,10 +15,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+  /* === Color Palette Variables === */
+  :root {
+    --bg-page: #F9FAFB;            /* Page background */
+    --bg-card: #FFFFFF;            /* Card / inputs / summary */
+    --border: #E5E7EB;             /* Borders and dividers */
+    --text-primary: #1F2937;       /* Main text */
+    --text-secondary: #4B5563;     /* Details / secondary text */
+    --accent: #6366F1;             /* Buttons / focus */
+    --accent-hover: #4F46E5;       /* Button hover */
+    --accent-disabled: #A5B4FC;    /* Disabled state */
+    --dropdown-hover: #E0E7FF;     /* Dropdown highlight */
+    --dropdown-text: #1E3A8A;      /* Dropdown highlight text */
+  }
+
   body {
     font-family: 'Inter', sans-serif;
-    background: #F9FAFB;
-    color: #1F2937;
+    background: var(--bg-page);
+    color: var(--text-primary);
     margin: 0;
     padding: 20px;
   }
@@ -27,7 +41,7 @@
     font-size: 1.9rem;
     font-weight: 700;
     text-align: center;
-    color: #1F2937;
+    color: var(--text-primary);
     margin-bottom: 10px;
   }
 
@@ -38,9 +52,9 @@
 
   label {
     font-weight: 600;
+    color: var(--text-primary);
     display: block;
     margin-bottom: 6px;
-    color: #1F2937;
     font-size: 16px;
   }
 
@@ -48,12 +62,11 @@
     width: 100%;
     padding: 8px 10px;
     font-size: 15px;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--border);
     border-radius: 6px;
     margin-bottom: 15px;
-    font-family: 'Inter', sans-serif;
-    background-color: #FFFFFF;
-    color: #1F2937;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
   }
 
   .week {
@@ -65,10 +78,10 @@
   }
 
   .day {
-    background: #FFFFFF;
+    background: var(--bg-card);
     padding: 14px 16px;
     border-radius: 8px;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--border);
     box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     position: relative;
@@ -82,47 +95,54 @@
 
   .day strong {
     font-size: 1.05rem;
-    color: #1F2937;
+    color: var(--text-primary);
   }
 
   .details {
     margin-top: 6px;
     font-size: 0.95rem;
-    color: #4B5563;
+    color: var(--text-secondary);
   }
 
   select {
     width: 100%;
     padding: 7px 8px;
-    border-radius: 6px;
     font-size: 15px;
-    font-family: 'Inter', sans-serif;
-    border: 1px solid #E5E7EB;
-    background: #FFFFFF;
-    color: #1F2937;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-primary);
   }
 
-  /* Tom Select overrides */
+  /* ===== Tom Select Overrides ===== */
   .ts-control {
     border-radius: 6px !important;
-    border: 1px solid #E5E7EB !important;
-    background: #FFFFFF !important;
+    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
     font-size: 15px;
   }
 
   .ts-dropdown {
-    z-index: 1000 !important;
+    z-index: 9999 !important;
     font-size: 15px;
   }
 
   .ts-dropdown .ts-option {
     padding: 6px 10px;
-    color: #1F2937;
+    color: var(--text-primary);
   }
 
-  /* --- Buttons --- */
+  .ts-dropdown .ts-option:hover,
+  .ts-dropdown .ts-option.active {
+    background-color: var(--dropdown-hover) !important;
+    color: var(--dropdown-text) !important;
+    font-weight: 500;
+  }
+
+  /* === Buttons === */
   button {
-    background-color: #6366F1;
+    background-color: var(--accent);
     color: white;
     border: none;
     border-radius: 6px;
@@ -133,47 +153,53 @@
     transition: background-color 0.2s ease;
   }
 
+  button:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+
   button:disabled {
-    background: #A5B4FC;
+    background-color: var(--accent-disabled);
     cursor: not-allowed;
   }
 
-  button:hover:not(:disabled) {
-    background-color: #4F46E5;
-  }
-
-  /* --- Summary --- */
+  /* === Summary === */
   .summary {
     margin-top: 28px;
     padding: 15px;
-    background: #FFFFFF;
+    background: var(--bg-card);
     border-radius: 8px;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--border);
   }
 
   .summary h2 {
     font-size: 1.4rem;
+    color: var(--text-primary);
     margin-bottom: 12px;
-    color: #1F2937;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 6px;
   }
 
   .summary-day {
     margin-bottom: 12px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #E5E7EB;
-    color: #374151;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
   }
 
   .summary-day strong {
-    width: 180px;
     display: inline-block;
+    width: 180px;
     font-weight: 600;
-    color: #1E293B;
+    color: var(--text-primary);
   }
 
-  /* --- Print Styles --- */
+  /* === Copy to Clipboard Feedback === */
+  #copyMsg {
+    color: green;
+    font-size: 14px;
+  }
+
+  /* === Print Styles === */
   @media print {
     body {
       background: white;
@@ -184,50 +210,27 @@
     }
     .summary {
       display: block !important;
-      margin-top: 0;
     }
     .summary-day strong {
       display: inline-block;
       width: 180px;
     }
   }
-/* --- Responsive Scaling --- */
-html {
-  font-size: 16px;
-}
 
-@media (max-width: 768px) {
+  /* === Responsive Scaling === */
   html {
-    font-size: 15px;
+    font-size: 16px;
   }
-}
-
-@media (max-width: 480px) {
-  html {
-    font-size: 14px;
+  @media (max-width: 768px) {
+    html { font-size: 15px; }
   }
-
-  .container {
-    padding: 0 15px;
+  @media (max-width: 480px) {
+    html { font-size: 14px; }
+    .container { padding: 0 15px; }
+    button { display: block; width: 100%; margin-bottom: 10px; }
+    .summary-day strong { display: block; width: 100%; margin-bottom: 4px; }
+    input[type="date"], select { font-size: 15px; }
   }
-
-  button {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .summary-day strong {
-    display: block;
-    width: 100%;
-    margin-bottom: 4px;
-  }
-
-  input[type="date"],
-  select {
-    font-size: 15px;
-  }
-}
 </style>
 </head>
 <body>
@@ -556,3 +559,4 @@ clearBtn.addEventListener('click', () => {
 </script>
 </body>
 </html>
+
