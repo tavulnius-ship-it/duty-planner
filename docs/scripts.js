@@ -164,10 +164,11 @@ days.forEach((day, idx) => {
   weekContainer.appendChild(div);
 
   new TomSelect(`#${selectId}`, {
-    create: false,
-    sortField: { field: 'text', direction: 'asc' },
-    placeholder: "-- Select Duty Code --"
-  });
+  create: false,
+  sortField: { field: 'text', direction: 'asc' },
+  placeholder: "-- Select Duty Code --",
+  dropdownParent: 'body' // ✅ Forces dropdown into <body>, avoiding overlap
+});
 
   document.getElementById(selectId).addEventListener('change', () => {
     const val = document.getElementById(selectId).value;
