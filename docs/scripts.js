@@ -1,4 +1,3 @@
-<script>
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const stationNames = {
@@ -297,4 +296,3 @@ clearBtn.addEventListener('click', () => {
   printBtn.disabled = true;
   exportBtn.disabled = true;
 });
-</script>
