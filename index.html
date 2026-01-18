@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Duty Planner</title>
+
+  <!-- Tom Select (searchable dropdowns) -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+<!-- Professional Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* === Color Palette Variables === */
+  :root {
+    --bg-page: #F9FAFB;            /* Page background */
+    --bg-card: #FFFFFF;            /* Card / inputs / summary */
+    --border: #E5E7EB;             /* Borders and dividers */
+    --text-primary: #1F2937;       /* Main text */
+    --text-secondary: #4B5563;     /* Details / secondary text */
+    --accent: #6366F1;             /* Buttons / focus */
+    --accent-hover: #4F46E5;       /* Button hover */
+    --accent-disabled: #A5B4FC;    /* Disabled state */
+    --dropdown-hover: #E0E7FF;     /* Dropdown highlight */
+    --dropdown-text: #1E3A8A;      /* Dropdown highlight text */
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.9rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: auto;
+  }
+
+  label {
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: 6px;
+    font-size: 16px;
+  }
+
+  input[type="date"] {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  .week {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+  }
+
+  .day {
+    background: var(--bg-card);
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .day:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  }
+
+  .day strong {
+    font-size: 1.05rem;
+    color: var(--text-primary);
+  }
+
+  .details {
+    margin-top: 6px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+
+  select {
+    width: 100%;
+    padding: 7px 8px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+  /* ===== Tom Select Overrides ===== */
+  .ts-control {
+    border-radius: 6px !important;
+    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    font-size: 15px;
+  }
+
+  .ts-dropdown {
+    z-index: 9999 !important;
+    position: absolute !important;
+    font-size: 15px;
+  }
+
+  .ts-dropdown .ts-option {
+    padding: 6px 10px;
+    color: var(--text-primary);
+  }
+
+  .ts-dropdown .ts-option:hover,
+  .ts-dropdown .ts-option.active {
+    background-color: var(--dropdown-hover) !important;
+    color: var(--dropdown-text) !important;
+    font-weight: 500;
+  }
+
+  /* === Buttons === */
+  button {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+  }
+
+  button:disabled {
+    background-color: var(--accent-disabled);
+    cursor: not-allowed;
+  }
+
+  /* === Summary === */
+  .summary {
+    margin-top: 28px;
+    padding: 15px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .summary h2 {
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  .summary-day {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .summary-day strong {
+    display: inline-block;
+    width: 180px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  /* === Copy to Clipboard Feedback === */
+  #copyMsg {
+    color: green;
+    font-size: 14px;
+  }
+
+  /* === Print Styles === */
+  @media print {
+    body {
+      background: white;
+      color: black;
+    }
+    .container, .week, button, input, select, .ts-control {
+      all: unset;
+    }
+    .summary {
+      display: block !important;
+    }
+    .summary-day strong {
+      display: inline-block;
+      width: 180px;
+    }
+  }
+
+  /* === Responsive Scaling === */
+  html {
+    font-size: 16px;
+  }
+  @media (max-width: 768px) {
+    html { font-size: 15px; }
+  }
+  @media (max-width: 480px) {
+    html { font-size: 14px; }
+    .container { padding: 0 15px; }
+    button { display: block; width: 100%; margin-bottom: 10px; }
+    .summary-day strong { display: block; width: 100%; margin-bottom: 4px; }
+    input[type="date"], select { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Weekly Duty Planner</h1>
+
+  <label for="weekStart"><strong>Week Commencing (Sunday):</strong></label>
+  <input type="date" id="weekStart" />
+
+  <div class="week" id="week"></div>
+
+  <div style="text-align: center;">
+    <button id="printBtn" disabled>Show Summary</button>
+    <button id="exportBtn" disabled>Export to Calendar</button>
+    <button id="clearBtn">Clear All</button>
+  </div>
+
+  <div class="summary" id="summary" style="display: none;">
+  <h2>Weekly Duty Summary</h2>
+  <div id="summaryContent"></div>
+  <!-- Copy to Clipboard -->
+  <button id="copyBtn" style="margin-top: 12px; display: none;">Copy to Clipboard</button>
+  <div id="copyMsg" style="color: green; font-size: 14px; margin-top: 6px; display: none;">Copied!</div>
+</div>
+
+<script>
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  const stationNames = {
+    CHI: 'Chichester',
+    SSS: 'South Shields',
+    HTH: 'Heworth',
+    GHD: 'Gateshead',
+    CEN: 'Central Station',
+    MMT: 'Monument',
+    SJM: 'St James',
+    MAN: 'Manors',
+    BYK: 'Byker',
+    NSH: 'North Shields',
+    HAY: 'Haymarket',
+    JES: 'Jesmond',
+    RGC: 'Regent Centre',
+    APT: 'Airport',
+    PLI: 'Park Lane Interchange'
+  };
+
+  const dutiesSunday = [
+    { code: '102/1020', station: 'CHI', time: '0800 - 1700' },
+    { code: '103/1030', station: 'SSS', time: '0800 - 1700' },
+    { code: '105/1050', station: 'GHD', time: '0800 - 1700' },
+    { code: '106/1060', station: 'CEN', time: '0800 - 1700' },
+    { code: '107/1070', station: 'MMT', time: '0800 - 1700' },
+    { code: '108/1080', station: 'SJM', time: '0800 - 1700' },
+    { code: '109/1090', station: 'MAN', time: '0800 - 1700' },
+    { code: '112A/B', station: 'HAY', time: '0800 - 1700' },
+    { code: '1021/1022', station: 'CHI', time: '1500 - 0000' },
+    { code: '1031/1032', station: 'SSS', time: '1500 - 0000' },
+    { code: '1051/1052', station: 'GHD', time: '1500 - 0000' },
+    { code: '1061/1062', station: 'CEN', time: '1500 - 0000' },
+    { code: '1071/1072', station: 'MMT', time: '1500 - 0000' },
+    { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
+    { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
+    { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
+    { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
+  ];
+
+  const dutiesSaturday = [
+    { code: '202/2020', station: 'CHI', time: '0700 - 1600' },
+    { code: '203/2030', station: 'SSS', time: '0700 - 1600' },
+    { code: '204/2040', station: 'HTH', time: '0700 - 1600' },
+    { code: '205/2050', station: 'GHD', time: '0700 - 1600' },
+    { code: '206/2060/2069', station: 'CEN', time: '0700 - 1600' },
+    { code: '207/2070', station: 'MMT', time: '0700 - 1600' },
+    { code: '208/2080', station: 'SJM', time: '0700 - 1600' },
+    { code: '209/2090', station: 'MAN', time: '0700 - 1600' },
+    { code: '210A/B', station: 'BYK', time: '0700 - 1600' },
+    { code: '211/2110', station: 'NSH', time: '0700 - 1600' },
+    { code: '212/2120', station: 'HAY', time: '0700 - 1600' },
+    { code: '213/2130', station: 'JES', time: '0700 - 1600' },
+    { code: '216', station: 'PLI', time: '0900 - 1800' },
+    { code: '2021/2022', station: 'CHI', time: '1500 - 0000' },
+    { code: '2031/2032', station: 'SSS', time: '1500 - 0000' },
+    { code: '2041/2042', station: 'HTH', time: '1500 - 0000' },
+    { code: '2051/2052', station: 'GHD', time: '1500 - 0000' },
+    { code: '2061/2062', station: 'CEN', time: '1500 - 0000' },
+    { code: '2071/2072', station: 'MMT', time: '1500 - 0000' },
+    { code: '2081/2082', station: 'SJM', time: '1500 - 0000' },
+    { code: '2091/2092', station: 'MAN', time: '1500 - 0000' },
+    { code: '2111/2112', station: 'NSH', time: '1500 - 0000' },
+    { code: '2121/2122', station: 'HAY', time: '1500 - 0000' }
+  ];
+
+  const dutiesWeekday = [
+    { code: '02A/B', station: 'CHI', time: '0700 - 1600' },
+    { code: '03A/B', station: 'SSS', time: '0700 - 1600' },
+    { code: '04A/B', station: 'HTH', time: '0645 - 1545' },
+    { code: '05A/B', station: 'GHD', time: '0630 - 1530' },
+    { code: '06A/B/C', station: 'CEN', time: '0630 - 1530' },
+    { code: '07A/B', station: 'MMT', time: '0630 - 1530' },
+    { code: '08A/B', station: 'SJM', time: '0645 - 1545' },
+    { code: '09A/B', station: 'MAN', time: '0645 - 1545' },
+    { code: '10A/B', station: 'BYK', time: '0700 - 1600' },
+    { code: '11A/B', station: 'NSH', time: '0700 - 1600' },
+    { code: '12A/B', station: 'HAY', time: '0630 - 1530' },
+    { code: '13A/B', station: 'JES', time: '0645 - 1545' },
+    { code: '14', station: 'RGC', time: '0700 - 1600' },
+    { code: '15A/B', station: 'APT', time: '0700 - 1600' },
+    { code: '16', station: 'PLI', time: '0700 - 1600' },
+    { code: '13-0', station: 'HAY', time: '1000 - 1900' },
+    { code: '13-1', station: 'MMT', time: '1000 - 1900' },
+    { code: '02-0/02-1', station: 'CHI', time: '1500 - 0000' },
+    { code: '03-0/03-1', station: 'SSS', time: '1500 - 0000' },
+    { code: '04X/Y', station: 'HTH', time: '1500 - 0000' },
+    { code: '05-1/05-2', station: 'GHD', time: '1500 - 0000' },
+    { code: '06X/Y', station: 'CEN', time: '1500 - 0000' },
+    { code: '07X/Y', station: 'MMT', time: '1500 - 0000' },
+    { code: '08X/Y', station: 'SJM', time: '1500 - 0000' },
+    { code: '09X/Y', station: 'MAN', time: '1500 - 0000' },
+    { code: '11-0/11-1', station: 'NSH', time: '1500 - 0000' },
+    { code: '12X/Y', station: 'HAY', time: '1500 - 0000' },
+    { code: '18', station: 'PLI', time: '1500 - 0000' }
+  ];
+
+  const selectedDuties = {};
+  const weekStartInput = document.getElementById('weekStart');
+  const weekContainer = document.getElementById('week');
+  const printBtn = document.getElementById('printBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const summaryContainer = document.getElementById('summary');
+  const summaryContent = document.getElementById('summaryContent');
+
+  function getDaySuffix(day) {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  }
+
+  function isValidWeekStart(dateStr) {
+    const date = new Date(dateStr);
+    return date.getDay() === 0;
+  }
+
+  function updateButtons() {
+    const validCount = Object.keys(selectedDuties).length >= 4;
+    const weekSelected = weekStartInput.value && isValidWeekStart(weekStartInput.value);
+    printBtn.disabled = !(validCount && weekSelected);
+    exportBtn.disabled = !(validCount && weekSelected);
+  }
+
+  function parseDutyTime(timeStr, dayOffset) {
+    const weekStart = new Date(weekStartInput.value);
+    const [sh, sm] = timeStr.split(' - ')[0].match(/.{1,2}/g).map(Number);
+    const [eh, em] = timeStr.split(' - ')[1].match(/.{1,2}/g).map(Number);
+
+    const start = new Date(weekStart);
+    start.setDate(start.getDate() + dayOffset);
+    start.setHours(sh, sm, 0);
+
+    const end = new Date(start);
+    end.setHours(eh, em, 0);
+    if (end <= start) end.setDate(end.getDate() + 1);
+    return [start, end];
+  }
+
+  function toICSDate(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  }
+
+  days.forEach((day, idx) => {
+    const list = day === 'Sunday'
+      ? dutiesSunday
+      : day === 'Saturday'
+      ? dutiesSaturday
+      : dutiesWeekday;
+
+    const div = document.createElement('div');
+    div.className = 'day';
+    const selectId = `select-${day}`;
+
+    div.innerHTML = `
+      <strong>${day}</strong><br/>
+      <select id="${selectId}" data-day="${day}">
+        <option value="">-- Select Duty Code --</option>
+        ${list.map(d => `<option value="${d.code}">${d.code}</option>`).join('')}
+      </select>
+      <div class="details" id="details-${day}"></div>
+    `;
+    weekContainer.appendChild(div);
+
+    new TomSelect(`#${selectId}`, {
+      create: false,
+      sortField: { field: 'text', direction: 'asc' },
+      placeholder: "-- Select Duty Code --"
+    });
+  });
+
+  weekContainer.addEventListener('change', (e) => {
+    if (e.target.tagName === 'SELECT') {
+      const day = e.target.dataset-day;
+      const val = e.target.value;
+      const list = day === 'Sunday'
+        ? dutiesSunday
+        : day === 'Saturday'
+        ? dutiesSaturday
+        : dutiesWeekday;
+      const duty = list.find(d => d.code === val);
+      const detailDiv = document.getElementById(`details-${day}`);
+
+      if (val && duty) {
+        selectedDuties[day] = val;
+        detailDiv.textContent = `${stationNames[duty.station] || duty.station} - ${duty.time}`;
+      } else {
+        delete selectedDuties[day];
+        detailDiv.textContent = '';
+      }
+
+      updateButtons();
+    }
+  });
+
+  weekStartInput.addEventListener('change', () => {
+    if (!weekStartInput.value) return;
+    const selected = new Date(weekStartInput.value);
+    const day = selected.getDay();
+    if (day !== 0) {
+      const daysToAdd = 7 - day;
+      selected.setDate(selected.getDate() + daysToAdd);
+      weekStartInput.value = selected.toISOString().split('T')[0];
+    }
+    updateButtons();
+  });
+
+  printBtn.addEventListener('click', () => {
+    summaryContent.innerHTML = '';
+    const weekStart = new Date(weekStartInput.value);
+
+    days.forEach((day, idx) => {
+      const dutyList = day === 'Sunday'
+        ? dutiesSunday
+        : day === 'Saturday'
+        ? dutiesSaturday
+        : dutiesWeekday;
+      const code = selectedDuties[day];
+      const duty = dutyList.find(d => d.code === code);
+
+      const dateForDay = new Date(weekStart);
+      dateForDay.setDate(weekStart.getDate() + idx);
+      const dateStr = `${day} ${dateForDay.getDate()}${getDaySuffix(dateForDay.getDate())}`;
+
+      const div = document.createElement('div');
+      div.className = 'summary-day';
+      div.innerHTML = duty
+        ? `<strong>${dateStr}:</strong> ${duty.code} = ${stationNames[duty.station] || duty.station} - ${duty.time}`
+        : `<strong>${dateStr}:</strong> RD`;
+      summaryContent.appendChild(div);
+    });
+
+    summaryContainer.style.display = 'block';
+    copyBtn.style.display = 'inline-block';
+  });
+
+  exportBtn.addEventListener('click', () => {
+    let ics = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//DutyPlanner//EN\n`;
+    Object.entries(selectedDuties).forEach(([day, code]) => {
+      const list = day === 'Sunday'
+        ? dutiesSunday
+        : day === 'Saturday'
+        ? dutiesSaturday
+        : dutiesWeekday;
+      const duty = list.find(d => d.code === code);
+      const offset = days.indexOf(day); 
+      const [start, end] = parseDutyTime(duty.time, offset);
+
+      ics += `BEGIN:VEVENT\nSUMMARY:${duty.code} = ${stationNames[duty.station] || duty.station}\n`;
+      ics += `DTSTART:${toICSDate(start)}\nDTEND:${toICSDate(end)}\n`;
+      ics += `LOCATION:${stationNames[duty.station] || duty.station}\n`;
+      ics += `DESCRIPTION:${duty.code} - ${duty.time}\nEND:VEVENT\n`;
+    });
+    ics += 'END:VCALENDAR';
+
+    const blob = new Blob([ics], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'weekly_duties.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+const clearBtn = document.getElementById('clearBtn');
+
+clearBtn.addEventListener('click', () => {
+  if (!confirm("Are you sure you want to clear all selections and reset the planner?")) return;
+
+  // Reset dropdowns
+  days.forEach(day => {
+    const select = document.getElementById(`select-${day}`);
+    if (select && select.tomselect) {
+      select.tomselect.clear();
+    }
+
+    const details = document.getElementById(`details-${day}`);
+    if (details) {
+      details.textContent = '';
+    }
+  });
+
+  // Clear selected duties and week input
+  Object.keys(selectedDuties).forEach(k => delete selectedDuties[k]);
+  weekStartInput.value = '';
+
+  // Hide summary and copy feedback
+  summaryContent.innerHTML = '';
+  summaryContainer.style.display = 'none';
+  copyBtn.style.display = 'none';
+  copyMsg.style.display = 'none';
+
+  // Disable buttons
+  printBtn.disabled = true;
+  exportBtn.disabled = true;
+});
+</script>
+</body>
+</html>
+
