@@ -243,12 +243,15 @@ html {
   <div style="text-align: center;">
     <button id="printBtn" disabled>Show Summary</button>
     <button id="exportBtn" disabled>Export to Calendar</button>
+    <button id="clearBtn">Clear All</button>
   </div>
 
-  <div class="summary" id="summary">
-    <h2>Weekly Duty Summary</h2>
-    <div id="summaryContent"></div>
-  </div>
+  <div class="summary" id="summary" style="display: none;">
+  <h2>Weekly Duty Summary</h2>
+  <div id="summaryContent"></div>
+  <!-- Copy to Clipboard -->
+  <button id="copyBtn" style="margin-top: 12px; display: none;">Copy to Clipboard</button>
+  <div id="copyMsg" style="color: green; font-size: 14px; margin-top: 6px; display: none;">Copied!</div>
 </div>
 
 <script>
@@ -488,6 +491,7 @@ html {
     });
 
     summaryContainer.style.display = 'block';
+    copyBtn.style.display = 'inline-block';
   });
 
   exportBtn.addEventListener('click', () => {
@@ -517,9 +521,38 @@ html {
     a.click();
     URL.revokeObjectURL(url);
   });
-</script>
+const clearBtn = document.getElementById('clearBtn');
 
+clearBtn.addEventListener('click', () => {
+  if (!confirm("Are you sure you want to clear all selections and reset the planner?")) return;
+
+  // Reset dropdowns
+  days.forEach(day => {
+    const select = document.getElementById(`select-${day}`);
+    if (select && select.tomselect) {
+      select.tomselect.clear();
+    }
+
+    const details = document.getElementById(`details-${day}`);
+    if (details) {
+      details.textContent = '';
+    }
+  });
+
+  // Clear selected duties and week input
+  Object.keys(selectedDuties).forEach(k => delete selectedDuties[k]);
+  weekStartInput.value = '';
+
+  // Hide summary and copy feedback
+  summaryContent.innerHTML = '';
+  summaryContainer.style.display = 'none';
+  copyBtn.style.display = 'none';
+  copyMsg.style.display = 'none';
+
+  // Disable buttons
+  printBtn.disabled = true;
+  exportBtn.disabled = true;
+});
+</script>
 </body>
 </html>
-
-
