@@ -16,12 +16,84 @@ const stationNames = {
   RGC: 'Regent Centre',
   APT: 'Airport',
   PLI: 'Park Lane Interchange'
-};
+ };
 
-// 💡 All your original duties arrays (unchanged)
-const dutiesSunday = [...]; // Keep your full Sunday array here
-const dutiesSaturday = [...]; // Keep Saturday here
-const dutiesWeekday = [...]; // And Weekdays here
+  const dutiesSunday = [
+    { code: '102/1020', station: 'CHI', time: '0800 - 1700' },
+    { code: '103/1030', station: 'SSS', time: '0800 - 1700' },
+    { code: '105/1050', station: 'GHD', time: '0800 - 1700' },
+    { code: '106/1060', station: 'CEN', time: '0800 - 1700' },
+    { code: '107/1070', station: 'MMT', time: '0800 - 1700' },
+    { code: '108/1080', station: 'SJM', time: '0800 - 1700' },
+    { code: '109/1090', station: 'MAN', time: '0800 - 1700' },
+    { code: '112A/B', station: 'HAY', time: '0800 - 1700' },
+    { code: '1021/1022', station: 'CHI', time: '1500 - 0000' },
+    { code: '1031/1032', station: 'SSS', time: '1500 - 0000' },
+    { code: '1051/1052', station: 'GHD', time: '1500 - 0000' },
+    { code: '1061/1062', station: 'CEN', time: '1500 - 0000' },
+    { code: '1071/1072', station: 'MMT', time: '1500 - 0000' },
+    { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
+    { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
+    { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
+    { code: '1120/1122', station: 'HAY', time: '1500 - 0000' }
+  ];
+
+  const dutiesSaturday = [
+    { code: '202/2020', station: 'CHI', time: '0700 - 1600' },
+    { code: '203/2030', station: 'SSS', time: '0700 - 1600' },
+    { code: '204/2040', station: 'HTH', time: '0700 - 1600' },
+    { code: '205/2050', station: 'GHD', time: '0700 - 1600' },
+    { code: '206/2060/2069', station: 'CEN', time: '0700 - 1600' },
+    { code: '207/2070', station: 'MMT', time: '0700 - 1600' },
+    { code: '208/2080', station: 'SJM', time: '0700 - 1600' },
+    { code: '209/2090', station: 'MAN', time: '0700 - 1600' },
+    { code: '210A/B', station: 'BYK', time: '0700 - 1600' },
+    { code: '211/2110', station: 'NSH', time: '0700 - 1600' },
+    { code: '212/2120', station: 'HAY', time: '0700 - 1600' },
+    { code: '213/2130', station: 'JES', time: '0700 - 1600' },
+    { code: '216', station: 'PLI', time: '0900 - 1800' },
+    { code: '2021/2022', station: 'CHI', time: '1500 - 0000' },
+    { code: '2031/2032', station: 'SSS', time: '1500 - 0000' },
+    { code: '2041/2042', station: 'HTH', time: '1500 - 0000' },
+    { code: '2051/2052', station: 'GHD', time: '1500 - 0000' },
+    { code: '2061/2062', station: 'CEN', time: '1500 - 0000' },
+    { code: '2071/2072', station: 'MMT', time: '1500 - 0000' },
+    { code: '2081/2082', station: 'SJM', time: '1500 - 0000' },
+    { code: '2091/2092', station: 'MAN', time: '1500 - 0000' },
+    { code: '2111/2112', station: 'NSH', time: '1500 - 0000' },
+    { code: '2121/2122', station: 'HAY', time: '1500 - 0000' }
+  ];
+
+  const dutiesWeekday = [
+    { code: '02A/B', station: 'CHI', time: '0700 - 1600' },
+    { code: '03A/B', station: 'SSS', time: '0700 - 1600' },
+    { code: '04A/B', station: 'HTH', time: '0645 - 1545' },
+    { code: '05A/B', station: 'GHD', time: '0630 - 1530' },
+    { code: '06A/B/C', station: 'CEN', time: '0630 - 1530' },
+    { code: '07A/B', station: 'MMT', time: '0630 - 1530' },
+    { code: '08A/B', station: 'SJM', time: '0645 - 1545' },
+    { code: '09A/B', station: 'MAN', time: '0645 - 1545' },
+    { code: '10A/B', station: 'BYK', time: '0700 - 1600' },
+    { code: '11A/B', station: 'NSH', time: '0700 - 1600' },
+    { code: '12A/B', station: 'HAY', time: '0630 - 1530' },
+    { code: '13A/B', station: 'JES', time: '0645 - 1545' },
+    { code: '14', station: 'RGC', time: '0700 - 1600' },
+    { code: '15A/B', station: 'APT', time: '0700 - 1600' },
+    { code: '16', station: 'PLI', time: '0700 - 1600' },
+    { code: '13-0', station: 'HAY', time: '1000 - 1900' },
+    { code: '13-1', station: 'MMT', time: '1000 - 1900' },
+    { code: '02-0/02-1', station: 'CHI', time: '1500 - 0000' },
+    { code: '03-0/03-1', station: 'SSS', time: '1500 - 0000' },
+    { code: '04X/Y', station: 'HTH', time: '1500 - 0000' },
+    { code: '05-1/05-2', station: 'GHD', time: '1500 - 0000' },
+    { code: '06X/Y', station: 'CEN', time: '1500 - 0000' },
+    { code: '07X/Y', station: 'MMT', time: '1500 - 0000' },
+    { code: '08X/Y', station: 'SJM', time: '1500 - 0000' },
+    { code: '09X/Y', station: 'MAN', time: '1500 - 0000' },
+    { code: '11-0/11-1', station: 'NSH', time: '1500 - 0000' },
+    { code: '12X/Y', station: 'HAY', time: '1500 - 0000' },
+    { code: '18', station: 'PLI', time: '1500 - 0000' }
+  ];
 
 const selectedDuties = {};
 const weekStartInput = document.getElementById('weekStart');
