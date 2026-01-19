@@ -35,7 +35,8 @@ const dutiesSunday = [
   { code: '1081/1082', station: 'SJM', time: '1500 - 0000' },
   { code: '1091/1092', station: 'MAN', time: '1500 - 0000' },
   { code: '1111/1112', station: 'NSH', time: '1500 - 0000' },
-  { code: '1120/1121', station: 'HAY', time: '1500 - 0000' }
+  { code: '1120/1121', station: 'HAY', time: '1500 - 0000' },
+  { code: 'Holiday', station: 'N/A', time: '0001 - 2359' }
 ];
 
 const dutiesSaturday = [
@@ -61,7 +62,8 @@ const dutiesSaturday = [
   { code: '2081/2082', station: 'SJM', time: '1500 - 0000' },
   { code: '2091/2092', station: 'MAN', time: '1500 - 0000' },
   { code: '2111/2112', station: 'NSH', time: '1500 - 0000' },
-  { code: '2121/2122', station: 'HAY', time: '1500 - 0000' }
+  { code: '2121/2122', station: 'HAY', time: '1500 - 0000' },
+  { code: 'Holiday', station: 'N/A', time: '0001 - 2359' }
 ];
 
 const dutiesWeekday = [
@@ -92,7 +94,8 @@ const dutiesWeekday = [
   { code: '09X/Y', station: 'MAN', time: '1500 - 0000' },
   { code: '11-0/11-1', station: 'NSH', time: '1500 - 0000' },
   { code: '12X/Y', station: 'HAY', time: '1500 - 0000' },
-  { code: '18', station: 'PLI', time: '1500 - 0000' }
+  { code: '18', station: 'PLI', time: '1500 - 0000' },
+  { code: 'Holiday', station: 'N/A', time: '0001 - 2359' }
 ];
 
 const selectedDuties = {};
